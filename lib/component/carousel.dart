@@ -50,7 +50,7 @@ class Carousel extends StatelessWidget {
         enableInfiniteScroll: true,
         reverse: false,
         autoPlay: true,
-        autoPlayInterval: Duration(seconds: 10),
+        autoPlayInterval: Duration(seconds: 5),
         autoPlayAnimationDuration: Duration(milliseconds: 800),
         autoPlayCurve: Curves.fastOutSlowIn,
         enlargeCenterPage: true,
@@ -62,8 +62,6 @@ class Carousel extends StatelessWidget {
             return Container(
               alignment: Alignment.bottomLeft,
               child: Container(
-                width: double.infinity,
-                color: Colors.grey.withOpacity(0.6),
                 child: Padding(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 8.0,

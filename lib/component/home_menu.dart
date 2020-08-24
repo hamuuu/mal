@@ -58,6 +58,7 @@ class HomeMenu extends StatelessWidget {
               physics: NeverScrollableScrollPhysics(),
               shrinkWrap: true,
               crossAxisCount: 4,
+              crossAxisSpacing: 1,
               children: [
                 ServiceButton(
                   koukiconAirplay: KoukiconsAirplay(

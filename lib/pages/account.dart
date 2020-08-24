@@ -16,7 +16,7 @@ class Account extends StatefulWidget {
 }
 
 class _AccountState extends State<Account> {
-  final String url = "https://api.jikan.moe/v3/user/exoacox/profile";
+  final String url = "https://api.jikan.moe/v3/user/kuro/profile";
   var data;
   Future<MalAccount> futureMalAccount;
 

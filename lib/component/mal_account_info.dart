@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:mal/component/chart_stats.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MalAccountInfo extends StatelessWidget {
@@ -14,7 +15,6 @@ class MalAccountInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     RegExp parseTime = RegExp(r".+?(?=T)");
-
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
@@ -23,7 +23,12 @@ class MalAccountInfo extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Image(
-                image: NetworkImage(snapshot.data.imageUrl, scale: 2.2),
+                image: snapshot.data.imageUrl != null
+                    ? NetworkImage(snapshot.data.imageUrl, scale: 2.2)
+                    : NetworkImage(
+                        'https://www.publicdomainpictures.net/pictures/280000/nahled/not-found-image-15383864787lu.jpg',
+                        scale: 6.3,
+                      ),
               ),
               SizedBox(width: 20),
               Expanded(
@@ -156,7 +161,9 @@ class MalAccountInfo extends StatelessWidget {
               ButtonBar(
                 children: [
                   RaisedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      _showModalAnimeStatsBottomSheet(context);
+                    },
                     child: Text('Anime Stats'),
                     color: Colors.blue,
                   ),
@@ -171,6 +178,18 @@ class MalAccountInfo extends StatelessWidget {
           )
         ],
       ),
+    );
+  }
+
+  void _showModalAnimeStatsBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext bc) {
+        return Container(
+          child:
+              HorizontalBarLabelChart.withSampleData(snapshot.data.animeStats),
+        );
+      },
     );
   }
 }

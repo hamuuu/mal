@@ -7,7 +7,6 @@ import 'package:mal/providers/auth.dart';
 import 'package:mal/providers/destination.dart';
 import 'package:provider/provider.dart';
 
-/// This Widget is the main application widget.
 class BottomNavbar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -42,6 +41,28 @@ class _DestinationRouterState extends State<DestinationRouter> {
     final _name = Provider.of<Auth>(context).account.displayName;
     return Scaffold(
       appBar: AppBar(
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.vertical(
+              bottom: Radius.circular(20),
+            ),
+            gradient: LinearGradient(
+              colors: [Colors.blue[300], Colors.blue[200]],
+              stops: [0.5, 1.0],
+            ),
+          ),
+        ),
+        toolbarHeight: 70,
+        actions: [
+          Image(
+            image: AssetImage('assets/logo-appbar.png'),
+          )
+        ],
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            bottom: Radius.circular(20),
+          ),
+        ),
         backgroundColor: Theme.of(context).accentColor,
         toolbarOpacity: 0.2,
         title: Column(
@@ -62,7 +83,7 @@ class _DestinationRouterState extends State<DestinationRouter> {
                 fontSize: 16,
               ),
             ),
-            SizedBox(height: 10)
+            SizedBox(height: 10),
           ],
         ),
       ),
