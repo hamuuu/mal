@@ -15,7 +15,7 @@ class HorizontalBarLabelChart extends StatelessWidget {
     return HorizontalBarLabelChart(
       _createSampleData(data),
       // Disable animations for image tests.
-      animate: false,
+      animate: true,
     );
   }
 
@@ -31,6 +31,8 @@ class HorizontalBarLabelChart extends StatelessWidget {
     return charts.BarChart(
       seriesList,
       animate: animate,
+      animationDuration: Duration(seconds: 1),
+
       vertical: false,
       // Set a bar label decorator.
       // Example configuring different styles for inside/outside:
@@ -44,33 +46,40 @@ class HorizontalBarLabelChart extends StatelessWidget {
   }
 
   /// Create one series with sample hard coded data.
-  static List<charts.Series<OrdinalSales, String>> _createSampleData(
+  static List<charts.Series<AnimeStatsGraph, String>> _createSampleData(
       AnimeStats value) {
     final data = [
-      OrdinalSales('Watching', value.watching),
-      OrdinalSales('Completed', value.completed),
-      OrdinalSales('On-Hold', value.onHold),
-      OrdinalSales('Dropped', value.dropped),
-      OrdinalSales('Plan to Watch', value.planToWatch),
+      AnimeStatsGraph('Watching', value.watching,
+          charts.MaterialPalette.deepOrange.shadeDefault),
+      AnimeStatsGraph('Completed', value.completed,
+          charts.MaterialPalette.green.shadeDefault),
+      AnimeStatsGraph(
+          'On-Hold', value.onHold, charts.MaterialPalette.yellow.shadeDefault),
+      AnimeStatsGraph(
+          'Dropped', value.dropped, charts.MaterialPalette.red.shadeDefault),
+      AnimeStatsGraph('Plan to Watch', value.planToWatch,
+          charts.MaterialPalette.gray.shadeDefault),
     ];
 
     return [
-      charts.Series<OrdinalSales, String>(
-          id: 'Sales',
-          domainFn: (OrdinalSales sales, _) => sales.year,
-          measureFn: (OrdinalSales sales, _) => sales.sales,
+      charts.Series<AnimeStatsGraph, String>(
+          id: 'AnimeStats',
+          domainFn: (AnimeStatsGraph stats, _) => stats.year,
+          measureFn: (AnimeStatsGraph stats, _) => stats.sales,
           data: data,
+          colorFn: (AnimeStatsGraph stats, __) => stats.color,
           // Set a label accessor to control the text of the bar label.
-          labelAccessorFn: (OrdinalSales sales, _) =>
+          labelAccessorFn: (AnimeStatsGraph sales, _) =>
               '${sales.year}: ${sales.sales.toString()}')
     ];
   }
 }
 
 /// Sample ordinal data type.
-class OrdinalSales {
+class AnimeStatsGraph {
   final String year;
   final int sales;
+  final color;
 
-  OrdinalSales(this.year, this.sales);
+  AnimeStatsGraph(this.year, this.sales, this.color);
 }

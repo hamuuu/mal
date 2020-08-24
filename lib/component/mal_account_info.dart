@@ -185,7 +185,7 @@ class MalAccountInfo extends StatelessWidget {
     showModalBottomSheet(
       context: context,
       builder: (BuildContext bc) {
-        return Container(
+        return SizedBox(
           child:
               HorizontalBarLabelChart.withSampleData(snapshot.data.animeStats),
         );
