@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "487758140952",
+    "firebase_url": "https://malapp-bd8ce.firebaseio.com",
+    "project_id": "malapp-bd8ce",
+    "storage_bucket": "malapp-bd8ce.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:487758140952:android:cf3d00276d7910bd3ed56d",
+        "android_client_info": {
+          "package_name": "com.example.mal"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "487758140952-vtn5rvsj1ecfo7heutl04b7bk5fh041t.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.mal",
+            "certificate_hash": "dab2dc712cfc4b110009bfe3c26418d7c5dbc3fb"
+          }
+        },
+        {
+          "client_id": "487758140952-hd490tm98h378cbe3sbc3nh06jsmslvu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAxi0JFrTOTqZhFwskIcMx54727GzsH8TQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "487758140952-hd490tm98h378cbe3sbc3nh06jsmslvu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

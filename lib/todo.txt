@@ -1,0 +1,17 @@
+modul:  - tv series list
+            sub: - order by http://api.jikan.moe/v3/search/anime?order_by=score&type=tv&page=1
+                 - search http://api.jikan.moe/v3/search/anime?q=Grand%20Blue&type=tv&page=1
+        - movie list 
+            sub: - order by http://api.jikan.moe/v3/search/anime?order_by=score&type=movie&page=1
+                 - search http://api.jikan.moe/v3/search/anime?q=Grand%20Blue&type=movie&page=1
+        - ova list
+            sub: - order by http://api.jikan.moe/v3/search/anime?order_by=score&type=ova&page=1
+                 - search http://api.jikan.moe/v3/search/anime?q=Grand%20Blue&type=ova&page=1
+        - season list anime all type
+            sub: - get all season available https://api.jikan.moe/v3/season/archive
+                 - get all anime list in the specified season https://api.jikan.moe/v3/season/2020/fall
+        - anime schedule (day)
+            sub: - get all schedule of anime https://api.jikan.moe/v3/schedule/day
+        - genre
+            sub: -get all anime with specified genre https://api.jikan.moe/v3/genre/anime/1/1
+
