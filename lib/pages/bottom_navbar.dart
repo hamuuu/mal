@@ -42,13 +42,15 @@ class _DestinationRouterState extends State<DestinationRouter> {
     return Scaffold(
       appBar: AppBar(
         flexibleSpace: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.vertical(
-              bottom: Radius.circular(20),
-            ),
-            gradient: LinearGradient(
-              colors: [Colors.blue[300], Colors.blue[200]],
-              stops: [0.5, 1.0],
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.vertical(
+                bottom: Radius.circular(20),
+              ),
+              gradient: LinearGradient(
+                colors: [Colors.blue[300], Colors.blue[200]],
+                stops: [0.5, 1.0],
+              ),
             ),
           ),
         ),
@@ -64,7 +66,7 @@ class _DestinationRouterState extends State<DestinationRouter> {
           ),
         ),
         backgroundColor: Theme.of(context).accentColor,
-        toolbarOpacity: 0.2,
+        toolbarOpacity: 1.0,
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

@@ -168,7 +168,9 @@ class MalAccountInfo extends StatelessWidget {
                     color: Colors.blue,
                   ),
                   RaisedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      _showModalMangaStatsBottomSheet(context);
+                    },
                     child: Text('Manga Stats'),
                     color: Colors.white70,
                   ),
@@ -185,10 +187,16 @@ class MalAccountInfo extends StatelessWidget {
     showModalBottomSheet(
       context: context,
       builder: (BuildContext bc) {
-        return SizedBox(
-          child:
-              HorizontalBarLabelChart.withSampleData(snapshot.data.animeStats),
-        );
+        return HorizontalBarLabelChart.animeStatsData(snapshot.data.animeStats);
+      },
+    );
+  }
+
+  void _showModalMangaStatsBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext bc) {
+        return HorizontalBarLabelChart.mangaStatsData(snapshot.data.mangaStats);
       },
     );
   }

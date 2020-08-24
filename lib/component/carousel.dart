@@ -62,6 +62,8 @@ class Carousel extends StatelessWidget {
             return Container(
               alignment: Alignment.bottomLeft,
               child: Container(
+                width: double.infinity,
+                color: Colors.black54,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 8.0,

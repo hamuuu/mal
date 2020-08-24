@@ -3,6 +3,8 @@ import 'dart:developer';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 import 'package:mal/model/mal_account.dart';
+import 'package:mal/providers/mal_account_provider.dart';
+import 'package:provider/provider.dart';
 
 class HorizontalBarLabelChart extends StatelessWidget {
   final List<charts.Series> seriesList;
@@ -10,54 +12,87 @@ class HorizontalBarLabelChart extends StatelessWidget {
 
   HorizontalBarLabelChart(this.seriesList, {this.animate});
 
-  /// Creates a [BarChart] with sample data and no transition.
-  factory HorizontalBarLabelChart.withSampleData(data) {
+  factory HorizontalBarLabelChart.animeStatsData(data) {
     return HorizontalBarLabelChart(
-      _createSampleData(data),
-      // Disable animations for image tests.
+      _createAnimeStatsData(data),
       animate: true,
     );
   }
 
-  // [BarLabelDecorator] will automatically position the label
-  // inside the bar if the label will fit. If the label will not fit and the
-  // area outside of the bar is larger than the bar, it will draw outside of the
-  // bar. Labels can always display inside or outside using [LabelPosition].
-  //
-  // Text style for inside / outside can be controlled independently by setting
-  // [insideLabelStyleSpec] and [outsideLabelStyleSpec].
+  factory HorizontalBarLabelChart.mangaStatsData(data) {
+    return HorizontalBarLabelChart(
+      _createMangaStatsData(data),
+      animate: true,
+    );
+  }
   @override
   Widget build(BuildContext context) {
     return charts.BarChart(
       seriesList,
       animate: animate,
       animationDuration: Duration(seconds: 1),
-
+      behaviors: [
+        charts.ChartTitle(
+          'Manga Stats from Your MAL Account',
+          outerPadding: 20,
+          innerPadding: 20,
+          titlePadding: 8,
+          titleStyleSpec: charts.TextStyleSpec(color: charts.Color.black),
+          behaviorPosition: charts.BehaviorPosition.top,
+          subTitle: Provider.of<MalAccountProvider>(context).account.username,
+        ),
+        charts.ChartTitle(
+          '',
+          behaviorPosition: charts.BehaviorPosition.bottom,
+          titleOutsideJustification: charts.OutsideJustification.middleDrawArea,
+        ),
+      ],
       vertical: false,
-      // Set a bar label decorator.
-      // Example configuring different styles for inside/outside:
-      //       barRendererDecorator:  charts.BarLabelDecorator(
-      //          insideLabelStyleSpec:  charts.TextStyleSpec(...),
-      //          outsideLabelStyleSpec:  charts.TextStyleSpec(...)),
       barRendererDecorator: charts.BarLabelDecorator<String>(),
-      // Hide domain axis.
       domainAxis: charts.OrdinalAxisSpec(renderSpec: charts.NoneRenderSpec()),
     );
   }
 
-  /// Create one series with sample hard coded data.
-  static List<charts.Series<AnimeStatsGraph, String>> _createSampleData(
+  static List<charts.Series<AnimeStatsGraph, String>> _createAnimeStatsData(
       AnimeStats value) {
     final data = [
-      AnimeStatsGraph('Watching', value.watching,
-          charts.MaterialPalette.deepOrange.shadeDefault),
       AnimeStatsGraph('Completed', value.completed,
           charts.MaterialPalette.green.shadeDefault),
+      AnimeStatsGraph('Watching', value.watching,
+          charts.MaterialPalette.deepOrange.shadeDefault),
       AnimeStatsGraph(
           'On-Hold', value.onHold, charts.MaterialPalette.yellow.shadeDefault),
       AnimeStatsGraph(
           'Dropped', value.dropped, charts.MaterialPalette.red.shadeDefault),
       AnimeStatsGraph('Plan to Watch', value.planToWatch,
+          charts.MaterialPalette.gray.shadeDefault),
+    ];
+
+    return [
+      charts.Series<AnimeStatsGraph, String>(
+          id: 'AnimeStats',
+          domainFn: (AnimeStatsGraph stats, _) => stats.year,
+          measureFn: (AnimeStatsGraph stats, _) => stats.sales,
+          data: data,
+          colorFn: (AnimeStatsGraph stats, __) => stats.color,
+          // Set a label accessor to control the text of the bar label.
+          labelAccessorFn: (AnimeStatsGraph sales, _) =>
+              '${sales.year}: ${sales.sales.toString()}')
+    ];
+  }
+
+  static List<charts.Series<AnimeStatsGraph, String>> _createMangaStatsData(
+      MangaStats value) {
+    final data = [
+      AnimeStatsGraph('Completed', value.completed,
+          charts.MaterialPalette.green.shadeDefault),
+      AnimeStatsGraph('Watching', value.reading,
+          charts.MaterialPalette.deepOrange.shadeDefault),
+      AnimeStatsGraph(
+          'On-Hold', value.onHold, charts.MaterialPalette.yellow.shadeDefault),
+      AnimeStatsGraph(
+          'Dropped', value.dropped, charts.MaterialPalette.red.shadeDefault),
+      AnimeStatsGraph('Plan to Watch', value.planToRead,
           charts.MaterialPalette.gray.shadeDefault),
     ];
 
