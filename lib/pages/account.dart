@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -20,6 +18,7 @@ class _AccountState extends State<Account> {
   var data;
   Future<MalAccount> futureMalAccount;
 
+  // ignore: missing_return
   Future<MalAccount> getData() async {
     if (Provider.of<MalAccountProvider>(context, listen: false).account ==
         null) {

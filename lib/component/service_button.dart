@@ -16,11 +16,16 @@ class ServiceButton extends StatelessWidget {
     return FlatButton(
       splashColor: Colors.blue,
       child: Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          koukiconAirplay,
-          SizedBox(height: 8),
+          Container(
+            padding: EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.blue[200],
+            ),
+            child: koukiconAirplay,
+          ),
+          SizedBox(height: 3),
           Text(
             label,
             style: TextStyle(fontSize: 10),

@@ -1,12 +1,9 @@
-import 'dart:developer';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:ui';
 
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:mal/model/mal_account.dart';
 import 'package:mal/providers/auth.dart';
 import 'package:mal/providers/mal_account_provider.dart';
 import 'package:provider/provider.dart';
@@ -187,8 +184,8 @@ class LoginMethod extends StatelessWidget {
                   _googleLogin(context);
                 },
                 child: Image(
-                  image: NetworkImage(
-                    'https://pngimg.com/uploads/google/google_PNG19630.png',
+                  image: AssetImage(
+                    'assets/login_page/google.png',
                   ),
                   height: 30,
                 ),
@@ -200,8 +197,8 @@ class LoginMethod extends StatelessWidget {
               child: FlatButton(
                 onPressed: () {},
                 child: Image(
-                  image: NetworkImage(
-                    'https://image.flaticon.com/icons/png/512/124/124010.png',
+                  image: AssetImage(
+                    'assets/login_page/facebook.png',
                   ),
                   height: 30,
                 ),

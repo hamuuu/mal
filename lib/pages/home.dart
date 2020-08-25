@@ -10,12 +10,23 @@ class Home extends StatelessWidget {
       child: Column(
         children: [
           SizedBox(height: 20),
-          Carousel(),
+          Stack(
+            children: [
+              Positioned.fill(
+                top: 10,
+                child: Image.asset(
+                  'assets/rainbow.jpg',
+                  fit: BoxFit.fill,
+                ),
+              ),
+              Carousel(),
+            ],
+          ),
           SizedBox(height: 20),
           HomeMenu(),
           SizedBox(height: 10),
           Divider(
-            color: Colors.grey[300],
+            color: Colors.grey[400],
           ),
           Welcome(),
           SizedBox(height: 20),

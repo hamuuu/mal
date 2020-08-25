@@ -35,69 +35,98 @@ final List<CarouselImage> imgList = [
   ),
 ];
 
-class Carousel extends StatelessWidget {
+class Carousel extends StatefulWidget {
   const Carousel({
     Key key,
   }) : super(key: key);
 
   @override
+  _CarouselState createState() => _CarouselState();
+}
+
+class _CarouselState extends State<Carousel> {
+  int _current;
+  @override
   Widget build(BuildContext context) {
-    return CarouselSlider(
-      options: CarouselOptions(
-        height: MediaQuery.of(context).size.height / 4,
-        viewportFraction: 0.8,
-        initialPage: 0,
-        enableInfiniteScroll: true,
-        reverse: false,
-        autoPlay: true,
-        autoPlayInterval: Duration(seconds: 5),
-        autoPlayAnimationDuration: Duration(milliseconds: 800),
-        autoPlayCurve: Curves.fastOutSlowIn,
-        enlargeCenterPage: true,
-        scrollDirection: Axis.horizontal,
-      ),
-      items: imgList.map((i) {
-        return Builder(
-          builder: (BuildContext context) {
+    return Column(
+      children: [
+        CarouselSlider(
+          options: CarouselOptions(
+            onPageChanged: (index, reason) {
+              setState(() {
+                _current = index;
+              });
+            },
+            height: MediaQuery.of(context).size.height * 0.28,
+            viewportFraction: 0.8,
+            initialPage: 0,
+            enableInfiniteScroll: true,
+            reverse: false,
+            autoPlay: true,
+            autoPlayInterval: Duration(seconds: 5),
+            autoPlayAnimationDuration: Duration(milliseconds: 800),
+            autoPlayCurve: Curves.fastOutSlowIn,
+            enlargeCenterPage: true,
+            scrollDirection: Axis.horizontal,
+          ),
+          items: imgList.map((i) {
+            return Builder(
+              builder: (BuildContext context) {
+                return Container(
+                  alignment: Alignment.bottomLeft,
+                  child: Container(
+                    width: double.infinity,
+                    color: Colors.black54,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8.0,
+                        vertical: 4.0,
+                      ),
+                      child: TextStroke(
+                        description: i.description,
+                        size: 14,
+                        strokeColor: Colors.black,
+                        strokeWidth: 0.6,
+                        fillColor: Colors.white,
+                      ),
+                    ),
+                  ),
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage('assets/carousel/${i.image}'),
+                      fit: BoxFit.fill,
+                    ),
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: <BoxShadow>[
+                      BoxShadow(
+                        color: Colors.grey,
+                        blurRadius: 10.0,
+                      ),
+                    ],
+                  ),
+                );
+              },
+            );
+          }).toList(),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: imgList.map((url) {
+            int index = imgList.indexOf(url);
             return Container(
-              alignment: Alignment.bottomLeft,
-              child: Container(
-                width: double.infinity,
-                color: Colors.black54,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 8.0,
-                    vertical: 4.0,
-                  ),
-                  child: TextStroke(
-                    description: i.description,
-                    size: 14,
-                    strokeColor: Colors.black,
-                    strokeWidth: 0.6,
-                    fillColor: Colors.white,
-                  ),
-                ),
-              ),
-              padding: EdgeInsets.only(bottom: 10),
-              width: MediaQuery.of(context).size.width,
-              margin: EdgeInsets.symmetric(horizontal: 2.0),
+              width: 8.0,
+              height: 8.0,
+              margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 2.0),
               decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('assets/carousel/${i.image}'),
-                  fit: BoxFit.fill,
-                ),
-                borderRadius: BorderRadius.circular(10),
-                boxShadow: <BoxShadow>[
-                  BoxShadow(
-                    color: Colors.grey,
-                    blurRadius: 10.0,
-                  ),
-                ],
+                shape: BoxShape.circle,
+                color: _current == index
+                    ? Color.fromRGBO(0, 0, 0, 0.9)
+                    : Color.fromRGBO(0, 0, 0, 0.4),
               ),
             );
-          },
-        );
-      }).toList(),
+          }).toList(),
+        ),
+      ],
     );
   }
 }

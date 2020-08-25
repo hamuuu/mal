@@ -40,6 +40,7 @@ class _DestinationRouterState extends State<DestinationRouter> {
   Widget build(BuildContext context) {
     final _name = Provider.of<Auth>(context).account.displayName;
     return Scaffold(
+      backgroundColor: Colors.white,
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
@@ -67,7 +68,7 @@ class _DestinationRouterState extends State<DestinationRouter> {
             ),
             actions: [
               Padding(
-                padding: const EdgeInsets.only(right: 10),
+                padding: const EdgeInsets.only(right: 10, top: 8),
                 child: Image(
                   image: AssetImage('assets/logo-appbar.png'),
                 ),

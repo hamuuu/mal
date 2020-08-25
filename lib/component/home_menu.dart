@@ -22,8 +22,8 @@ class HomeMenu extends StatelessWidget {
               Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(5),
-                    topRight: Radius.circular(5),
+                    topLeft: Radius.circular(10),
+                    topRight: Radius.circular(10),
                   ),
                   color: Colors.lightBlue[50],
                 ),
@@ -55,6 +55,7 @@ class HomeMenu extends StatelessWidget {
               color: Colors.lightBlue[50],
             ),
             child: GridView.count(
+              padding: EdgeInsets.all(10),
               physics: NeverScrollableScrollPhysics(),
               shrinkWrap: true,
               crossAxisCount: 4,
@@ -62,42 +63,42 @@ class HomeMenu extends StatelessWidget {
               children: [
                 ServiceButton(
                   koukiconAirplay: KoukiconsAirplay(
-                    height: 30,
+                    height: 40,
                   ),
                   label: "TV Series",
                   routeName: "tvSeries",
                 ),
                 ServiceButton(
                   koukiconAirplay: KoukiconsMovie2(
-                    height: 30,
+                    height: 40,
                   ),
                   label: "Movie",
                   routeName: "movie",
                 ),
                 ServiceButton(
                   koukiconAirplay: KoukiconsMultipleDevices(
-                    height: 30,
+                    height: 40,
                   ),
                   label: "OVA",
                   routeName: "home",
                 ),
                 ServiceButton(
                   koukiconAirplay: KoukiconsCloud(
-                    height: 30,
+                    height: 40,
                   ),
                   label: "Season",
                   routeName: "home",
                 ),
                 ServiceButton(
                   koukiconAirplay: KoukiconsAlarm2(
-                    height: 30,
+                    height: 40,
                   ),
                   label: "Schedule",
                   routeName: "home",
                 ),
                 ServiceButton(
                   koukiconAirplay: KoukiconsAlbumsView(
-                    height: 30,
+                    height: 40,
                   ),
                   label: "Genre",
                   routeName: "home",

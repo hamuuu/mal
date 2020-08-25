@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:mal/component/chart_stats.dart';
 
 class Forum extends StatelessWidget {
   @override
