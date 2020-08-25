@@ -16,7 +16,7 @@ class Account extends StatefulWidget {
 }
 
 class _AccountState extends State<Account> {
-  final String url = "https://api.jikan.moe/v3/user/triginta/profile";
+  final String url = "https://api.jikan.moe/v3/user/asuna/profile";
   var data;
   Future<MalAccount> futureMalAccount;
 
@@ -50,7 +50,7 @@ class _AccountState extends State<Account> {
   @override
   Widget build(BuildContext context) {
     final _account = Provider.of<Auth>(context).account;
-    return ListView(
+    return Column(
       children: [
         Container(
           decoration: BoxDecoration(

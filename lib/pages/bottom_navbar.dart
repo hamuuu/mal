@@ -40,57 +40,66 @@ class _DestinationRouterState extends State<DestinationRouter> {
   Widget build(BuildContext context) {
     final _name = Provider.of<Auth>(context).account.displayName;
     return Scaffold(
-      appBar: AppBar(
-        flexibleSpace: Container(
-          child: Container(
-            decoration: BoxDecoration(
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            title: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 20),
+                Text(
+                  'YOU ARE IN',
+                  style: TextStyle(
+                    color: Colors.white70,
+                    fontSize: 11,
+                  ),
+                ),
+                SizedBox(height: 5),
+                Text(
+                  '$_name',
+                  style: TextStyle(
+                    color: Colors.white70,
+                    fontSize: 16,
+                  ),
+                ),
+                SizedBox(height: 10),
+              ],
+            ),
+            actions: [
+              Padding(
+                padding: const EdgeInsets.only(right: 10),
+                child: Image(
+                  image: AssetImage('assets/logo-appbar.png'),
+                ),
+              )
+            ],
+            floating: true,
+            shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.vertical(
                 bottom: Radius.circular(20),
               ),
-              gradient: LinearGradient(
-                colors: [Colors.blue[300], Colors.blue[200]],
-                stops: [0.5, 1.0],
+            ),
+            flexibleSpace: Container(
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.vertical(
+                    bottom: Radius.circular(20),
+                  ),
+                  gradient: LinearGradient(
+                    colors: [Colors.blue[300], Colors.blue[200]],
+                    stops: [0.5, 1.0],
+                  ),
+                ),
               ),
             ),
+            expandedHeight: 70,
           ),
-        ),
-        toolbarHeight: 70,
-        actions: [
-          Image(
-            image: AssetImage('assets/logo-appbar.png'),
-          )
+          SliverToBoxAdapter(
+            child: Center(
+              child: _widgetOptions.elementAt(_selectedIndex),
+            ),
+          ),
         ],
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(
-            bottom: Radius.circular(20),
-          ),
-        ),
-        backgroundColor: Theme.of(context).accentColor,
-        toolbarOpacity: 1.0,
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'YOU ARE IN',
-              style: TextStyle(
-                color: Colors.white70,
-                fontSize: 11,
-              ),
-            ),
-            SizedBox(height: 5),
-            Text(
-              '$_name',
-              style: TextStyle(
-                color: Colors.white70,
-                fontSize: 16,
-              ),
-            ),
-            SizedBox(height: 10),
-          ],
-        ),
-      ),
-      body: Center(
-        child: _widgetOptions.elementAt(_selectedIndex),
       ),
       bottomNavigationBar: BottomNavigationBar(
         showUnselectedLabels: true,
