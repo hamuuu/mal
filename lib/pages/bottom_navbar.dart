@@ -39,6 +39,7 @@ class _DestinationRouterState extends State<DestinationRouter> {
   @override
   Widget build(BuildContext context) {
     final _name = Provider.of<Auth>(context).account.displayName;
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: CustomScrollView(

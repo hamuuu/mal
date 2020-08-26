@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mal/component/anime_list.dart';
 
 class TvSeries extends StatelessWidget {
   @override
@@ -69,6 +70,7 @@ class TvSeries extends StatelessWidget {
           ),
           SliverToBoxAdapter(
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(height: 5),
                 Container(
@@ -154,7 +156,9 @@ class TvSeries extends StatelessWidget {
                     ),
                   ),
                 ),
-                Divider(color: Colors.grey[400], thickness: 1.5, height: 10)
+                Divider(color: Colors.grey[400], thickness: 1.5, height: 10),
+                SizedBox(height: 10),
+                AnimeList(),
               ],
             ),
           ),
