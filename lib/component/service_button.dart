@@ -32,9 +32,7 @@ class ServiceButton extends StatelessWidget {
           ),
         ],
       ),
-      onPressed: () {
-        Navigator.pushNamed(context, 'tvSeries');
-      },
+      onPressed: () => Navigator.pushNamed(context, routeName),
     );
   }
 }

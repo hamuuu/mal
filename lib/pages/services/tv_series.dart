@@ -1,7 +1,36 @@
-import 'package:flutter/material.dart';
-import 'package:mal/component/anime_list.dart';
+import 'dart:developer';
 
-class TvSeries extends StatelessWidget {
+import 'package:flutter/material.dart';
+import 'package:koukicons/businessman.dart';
+import 'package:koukicons/star.dart';
+import 'package:koukicons/streetName.dart';
+import 'package:mal/component/anime_list.dart';
+import 'package:mal/providers/tv_series_provider.dart';
+import 'package:provider/provider.dart';
+
+class TvSeries extends StatefulWidget {
+  @override
+  _TvSeriesState createState() => _TvSeriesState();
+}
+
+class _TvSeriesState extends State<TvSeries> {
+  int _rg = 1;
+  String _selectedValue;
+
+  final List<RadioGroup> _filterGroup = [
+    RadioGroup(index: 1, text: 'Score'),
+    RadioGroup(index: 2, text: 'Title'),
+    RadioGroup(index: 3, text: 'Active Members'),
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      _selectedValue = "Score";
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -85,12 +114,14 @@ class TvSeries extends StatelessWidget {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20),
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            buildShowDialog(context);
+                          },
                           splashColor: Colors.grey[600],
                           child: Row(
                             children: [
                               Text(
-                                'Sort by',
+                                'Order by',
                                 style: TextStyle(
                                   fontSize: 12,
                                   color: Colors.black87,
@@ -105,11 +136,20 @@ class TvSeries extends StatelessWidget {
                         ),
                         SizedBox(width: 10),
                         FlatButton(
-                          color: Colors.grey[400],
+                          color: Provider.of<TvSeriesFilterProvider>(context)
+                                  .onGoing
+                              ? Colors.green[400]
+                              : Colors.grey[400],
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20),
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            Provider.of<TvSeriesFilterProvider>(
+                              context,
+                            ).editFilter(
+                                !Provider.of<TvSeriesFilterProvider>(context)
+                                    .onGoing);
+                          },
                           splashColor: Colors.grey[600],
                           child: Text(
                             'Ongoing',
@@ -120,21 +160,6 @@ class TvSeries extends StatelessWidget {
                           ),
                         ),
                         SizedBox(width: 10),
-                        FlatButton(
-                          color: Colors.grey[400],
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          onPressed: () {},
-                          splashColor: Colors.grey[600],
-                          child: Text(
-                            'Season',
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.black87,
-                            ),
-                          ),
-                        ),
                         SizedBox(width: 10),
                         FlatButton(
                           color: Colors.grey[400],
@@ -166,4 +191,62 @@ class TvSeries extends StatelessWidget {
       ),
     );
   }
+
+  buildShowDialog(BuildContext context) {
+    inspect(_selectedValue);
+
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            content: StatefulBuilder(
+              builder: (BuildContext context, StateSetter setState) {
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: _filterGroup
+                      .map(
+                        (value) => Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  children: [
+                                    Text(value.text),
+                                    SizedBox(width: 10),
+                                    KoukiconsStar(height: 20),
+                                  ],
+                                ),
+                                Radio(
+                                  value: value.index,
+                                  groupValue: _rg,
+                                  materialTapTargetSize:
+                                      MaterialTapTargetSize.shrinkWrap,
+                                  onChanged: (data) {
+                                    setState(() {
+                                      _rg = data;
+                                      _selectedValue = value.text;
+                                    });
+                                  },
+                                  activeColor: Colors.grey[200],
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      )
+                      .toList(),
+                );
+              },
+            ),
+          );
+        });
+  }
+}
+
+class RadioGroup {
+  final int index;
+  final String text;
+
+  RadioGroup({this.index, this.text});
 }

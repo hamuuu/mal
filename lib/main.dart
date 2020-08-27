@@ -1,4 +1,5 @@
 import 'package:mal/providers/mal_account_provider.dart';
+import 'package:mal/providers/tv_series_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:mal/router.dart' as router;
 
@@ -12,6 +13,7 @@ void main() {
       providers: [
         ChangeNotifierProvider(create: (context) => Auth()),
         ChangeNotifierProvider(create: (context) => MalAccountProvider()),
+        ChangeNotifierProvider(create: (context) => TvSeriesFilterProvider()),
       ],
       child: MaterialApp(
         theme: ThemeData(

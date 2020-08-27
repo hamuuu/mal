@@ -6,6 +6,8 @@ import 'package:mal/model/anime_list_model.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:mal/providers/tv_series_provider.dart';
+import 'package:provider/provider.dart';
 
 class AnimeList extends StatefulWidget {
   @override
@@ -29,19 +31,18 @@ class _AnimeListState extends State<AnimeList> {
   @override
   void initState() {
     super.initState();
-    futureAnimeList = fetchAnimeList();
   }
 
   @override
   Widget build(BuildContext context) {
     RegExp parseTime = RegExp(r".+?(?=T)");
     final DateFormat formatter = DateFormat('MMM, yyyy');
-
+    var _futureAnimeList = Provider.of<TvSeriesFilterProvider>(context)
+        .fetchAnimeList(Provider.of<TvSeriesFilterProvider>(context).onGoing);
     return FutureBuilder(
-      future: futureAnimeList,
+      future: _futureAnimeList,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          inspect(snapshot.data);
           return ListView.builder(
             physics: NeverScrollableScrollPhysics(),
             shrinkWrap: true,
@@ -108,22 +109,24 @@ class _AnimeListState extends State<AnimeList> {
                                   ),
                                 ],
                               ),
-                              SizedBox(height: 10),
+                              SizedBox(height: 5),
                               Text(
-                                snapshot.data.animes[index].rated,
+                                snapshot.data.animes[index].rated != null
+                                    ? snapshot.data.animes[index].rated
+                                    : '',
                                 style: TextStyle(
                                   fontSize: 10,
-                                  color: Colors.black54,
+                                  color: Colors.red[400],
                                 ),
                               ),
-                              Text(
-                                '${formatter.format(DateTime.parse(parseTime.firstMatch(snapshot.data.animes[index].startDate).group(0)))} - ${formatter.format(DateTime.parse(parseTime.firstMatch(snapshot.data.animes[index].endDate).group(0)))}',
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.black87,
-                                ),
-                                maxLines: 1,
-                              ),
+                              // Text(
+                              //   '${formatter.format(DateTime.parse(parseTime.firstMatch(snapshot.data.animes[index].startDate).group(0)))} - ${formatter.format(DateTime.parse(parseTime.firstMatch(snapshot.data.animes[index].endDate).group(0)))}',
+                              //   style: TextStyle(
+                              //     fontSize: 12,
+                              //     color: Colors.black87,
+                              //   ),
+                              //   maxLines: 1,
+                              // ),
                               SizedBox(height: 10),
                               Text(
                                 snapshot.data.animes[index].synopsis,
