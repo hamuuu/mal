@@ -38,7 +38,8 @@ class _AnimeListState extends State<AnimeList> {
     RegExp parseTime = RegExp(r".+?(?=T)");
     final DateFormat formatter = DateFormat('MMM, yyyy');
     var _futureAnimeList = Provider.of<TvSeriesFilterProvider>(context)
-        .fetchAnimeList(Provider.of<TvSeriesFilterProvider>(context).onGoing);
+        .fetchAnimeList(Provider.of<TvSeriesFilterProvider>(context).onGoing,
+            Provider.of<TvSeriesFilterProvider>(context).orderBy);
     return FutureBuilder(
       future: _futureAnimeList,
       builder: (context, snapshot) {
@@ -64,6 +65,7 @@ class _AnimeListState extends State<AnimeList> {
                                 snapshot.data.animes[index].imageUrl,
                                 scale: 2,
                               ),
+                              fit: BoxFit.fill,
                             ),
                             Container(
                               color: Colors.blue[600],

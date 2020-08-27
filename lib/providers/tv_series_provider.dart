@@ -7,10 +7,13 @@ import 'package:http/http.dart' as http;
 
 class TvSeriesFilterProvider with ChangeNotifier {
   bool _onGoing = false;
+  String _orderBy = "Score";
 
-  Future<AnimeListModel> fetchAnimeList(bool onGoing) async {
-    String url =
-        'http://api.jikan.moe/v3/search/anime?order_by=score&type=tv&page=1&limit=10';
+  Future<AnimeListModel> fetchAnimeList(bool onGoing, String orderBy) async {
+    String url = 'http://api.jikan.moe/v3/search/anime?type=tv&page=1&limit=10';
+    if (orderBy == "Score") url = url + '&order_by=score';
+    if (orderBy == "Title") url = url + '&order_by=title';
+    if (orderBy == "Active Members") url = url + '&order_by=members';
     if (onGoing) url = url + '&status=airing';
     final response = await http.get(url);
 
@@ -21,15 +24,18 @@ class TvSeriesFilterProvider with ChangeNotifier {
     }
   }
 
-  void editFilter(bool onGoing) {
+  void editFilter(bool onGoing, String orderBy) {
     _onGoing = onGoing;
+    _orderBy = orderBy;
     notifyListeners();
   }
 
   void removeFilter() {
     _onGoing = null;
+    _orderBy = null;
     notifyListeners();
   }
 
   bool get onGoing => _onGoing;
+  String get orderBy => _orderBy;
 }

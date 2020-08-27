@@ -15,21 +15,16 @@ class TvSeries extends StatefulWidget {
 
 class _TvSeriesState extends State<TvSeries> {
   int _rg = 1;
-  String _selectedValue;
+  String _activatedOrderBy = null;
 
   final List<RadioGroup> _filterGroup = [
-    RadioGroup(index: 1, text: 'Score'),
-    RadioGroup(index: 2, text: 'Title'),
-    RadioGroup(index: 3, text: 'Active Members'),
+    RadioGroup(index: 1, text: 'Score', icon: KoukiconsStar(height: 35)),
+    RadioGroup(index: 2, text: 'Title', icon: KoukiconsStreetName(height: 35)),
+    RadioGroup(
+        index: 3,
+        text: 'Active Members',
+        icon: KoukiconsBusinessman(height: 35)),
   ];
-
-  @override
-  void initState() {
-    super.initState();
-    setState(() {
-      _selectedValue = "Score";
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -110,7 +105,9 @@ class _TvSeriesState extends State<TvSeries> {
                       children: [
                         SizedBox(width: 10),
                         FlatButton(
-                          color: Colors.grey[400],
+                          color: _activatedOrderBy != null
+                              ? Colors.green[400]
+                              : Colors.grey[400],
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20),
                           ),
@@ -121,7 +118,9 @@ class _TvSeriesState extends State<TvSeries> {
                           child: Row(
                             children: [
                               Text(
-                                'Order by',
+                                _activatedOrderBy == null
+                                    ? 'Order by'
+                                    : 'Order by $_activatedOrderBy',
                                 style: TextStyle(
                                   fontSize: 12,
                                   color: Colors.black87,
@@ -148,7 +147,9 @@ class _TvSeriesState extends State<TvSeries> {
                               context,
                             ).editFilter(
                                 !Provider.of<TvSeriesFilterProvider>(context)
-                                    .onGoing);
+                                    .onGoing,
+                                Provider.of<TvSeriesFilterProvider>(context)
+                                    .orderBy);
                           },
                           splashColor: Colors.grey[600],
                           child: Text(
@@ -193,8 +194,6 @@ class _TvSeriesState extends State<TvSeries> {
   }
 
   buildShowDialog(BuildContext context) {
-    inspect(_selectedValue);
-
     return showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -203,39 +202,68 @@ class _TvSeriesState extends State<TvSeries> {
               builder: (BuildContext context, StateSetter setState) {
                 return Column(
                   mainAxisSize: MainAxisSize.min,
-                  children: _filterGroup
-                      .map(
-                        (value) => Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Choose your list order',
+                      style: TextStyle(
+                        color: Colors.black87,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15,
+                      ),
+                    ),
+                    SizedBox(height: 30),
+                    Column(
+                      children: _filterGroup
+                          .map(
+                            (value) => Column(
                               children: [
                                 Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text(value.text),
-                                    SizedBox(width: 10),
-                                    KoukiconsStar(height: 20),
+                                    Row(
+                                      children: [
+                                        Text(value.text),
+                                        SizedBox(width: 10),
+                                        value.icon,
+                                      ],
+                                    ),
+                                    Radio(
+                                      value: value.index,
+                                      groupValue: _rg,
+                                      materialTapTargetSize:
+                                          MaterialTapTargetSize.shrinkWrap,
+                                      onChanged: (data) {
+                                        setState(() {
+                                          _rg = data;
+                                          Provider.of<TvSeriesFilterProvider>(
+                                                  context)
+                                              .editFilter(
+                                            Provider.of<TvSeriesFilterProvider>(
+                                                    context)
+                                                .onGoing,
+                                            value.text,
+                                          );
+                                          _activatedOrderBy = value.text;
+                                        });
+                                        Navigator.pop(context);
+                                      },
+                                      activeColor: Colors.blue[500],
+                                    ),
                                   ],
                                 ),
-                                Radio(
-                                  value: value.index,
-                                  groupValue: _rg,
-                                  materialTapTargetSize:
-                                      MaterialTapTargetSize.shrinkWrap,
-                                  onChanged: (data) {
-                                    setState(() {
-                                      _rg = data;
-                                      _selectedValue = value.text;
-                                    });
-                                  },
-                                  activeColor: Colors.grey[200],
-                                ),
+                                Divider(
+                                  height: 7,
+                                  color: Colors.grey[400],
+                                )
                               ],
                             ),
-                          ],
-                        ),
-                      )
-                      .toList(),
+                          )
+                          .toList(),
+                    ),
+                    SizedBox(height: 20)
+                  ],
                 );
               },
             ),
@@ -247,6 +275,7 @@ class _TvSeriesState extends State<TvSeries> {
 class RadioGroup {
   final int index;
   final String text;
+  final Object icon;
 
-  RadioGroup({this.index, this.text});
+  RadioGroup({this.index, this.icon, this.text});
 }
