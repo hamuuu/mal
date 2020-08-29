@@ -66,13 +66,14 @@ class _CarouselState extends State<Carousel> {
             autoPlayInterval: Duration(seconds: 5),
             autoPlayAnimationDuration: Duration(milliseconds: 800),
             autoPlayCurve: Curves.fastOutSlowIn,
-            enlargeCenterPage: true,
+            enlargeCenterPage: false,
             scrollDirection: Axis.horizontal,
           ),
           items: imgList.map((i) {
             return Builder(
               builder: (BuildContext context) {
                 return Container(
+                  margin: EdgeInsets.symmetric(horizontal: 5),
                   alignment: Alignment.bottomLeft,
                   child: Container(
                     width: double.infinity,

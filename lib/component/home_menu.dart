@@ -16,8 +16,8 @@ class HomeMenu extends StatelessWidget {
       child: Column(
         children: [
           Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container(
                 decoration: BoxDecoration(
@@ -43,6 +43,18 @@ class HomeMenu extends StatelessWidget {
                   ),
                 ),
               ),
+              Container(
+                width: 50,
+                height: 50,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  image: DecorationImage(
+                    image: AssetImage(
+                      'assets/maneki-neko.png',
+                    ),
+                  ),
+                ),
+              )
             ],
           ),
           Container(

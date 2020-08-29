@@ -77,7 +77,7 @@ class Animes {
     synopsis = json['synopsis'];
     type = json['type'];
     episodes = json['episodes'];
-    score = json['score'] + .0;
+    score = json['score'] != null ? json['score'] + .0 : 0.00;
     startDate = json['start_date'];
     endDate = json['end_date'];
     members = json['members'];

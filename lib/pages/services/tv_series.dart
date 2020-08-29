@@ -1,10 +1,11 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:koukicons/businessman.dart';
-import 'package:koukicons/star.dart';
-import 'package:koukicons/streetName.dart';
+import 'package:koukicons/search.dart';
+import 'package:koukicons/search2.dart';
 import 'package:mal/component/anime_list.dart';
+import 'package:mal/component/filter_bar_button.dart';
+import 'package:mal/component/search_bar.dart';
 import 'package:mal/providers/tv_series_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -14,17 +15,14 @@ class TvSeries extends StatefulWidget {
 }
 
 class _TvSeriesState extends State<TvSeries> {
-  int _rg = 1;
-  String _activatedOrderBy = null;
+  bool _showSearchBar;
 
-  final List<RadioGroup> _filterGroup = [
-    RadioGroup(index: 1, text: 'Score', icon: KoukiconsStar(height: 35)),
-    RadioGroup(index: 2, text: 'Title', icon: KoukiconsStreetName(height: 35)),
-    RadioGroup(
-        index: 3,
-        text: 'Active Members',
-        icon: KoukiconsBusinessman(height: 35)),
-  ];
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _showSearchBar = false;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +59,10 @@ class _TvSeriesState extends State<TvSeries> {
               padding: const EdgeInsets.only(top: 10),
               child: IconButton(
                 icon: Icon(Icons.arrow_back_ios),
-                onPressed: () => Navigator.pop(context),
+                onPressed: () {
+                  Navigator.pop(context);
+                  Provider.of<TvSeriesFilterProvider>(context).removeFilter();
+                },
               ),
             ),
             automaticallyImplyLeading: false,
@@ -97,93 +98,12 @@ class _TvSeriesState extends State<TvSeries> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(height: 5),
-                Container(
-                  // padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: [
-                        SizedBox(width: 10),
-                        FlatButton(
-                          color: _activatedOrderBy != null
-                              ? Colors.green[400]
-                              : Colors.grey[400],
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          onPressed: () {
-                            buildShowDialog(context);
-                          },
-                          splashColor: Colors.grey[600],
-                          child: Row(
-                            children: [
-                              Text(
-                                _activatedOrderBy == null
-                                    ? 'Order by'
-                                    : 'Order by $_activatedOrderBy',
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.black87,
-                                ),
-                              ),
-                              Icon(
-                                Icons.arrow_drop_down,
-                                color: Colors.black87,
-                              ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(width: 10),
-                        FlatButton(
-                          color: Provider.of<TvSeriesFilterProvider>(context)
-                                  .onGoing
-                              ? Colors.green[400]
-                              : Colors.grey[400],
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          onPressed: () {
-                            Provider.of<TvSeriesFilterProvider>(
-                              context,
-                            ).editFilter(
-                                !Provider.of<TvSeriesFilterProvider>(context)
-                                    .onGoing,
-                                Provider.of<TvSeriesFilterProvider>(context)
-                                    .orderBy);
-                          },
-                          splashColor: Colors.grey[600],
-                          child: Text(
-                            'Ongoing',
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.black87,
-                            ),
-                          ),
-                        ),
-                        SizedBox(width: 10),
-                        SizedBox(width: 10),
-                        FlatButton(
-                          color: Colors.grey[400],
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          onPressed: () {},
-                          splashColor: Colors.grey[600],
-                          child: Text(
-                            'Studio',
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.black87,
-                            ),
-                          ),
-                        ),
-                        SizedBox(width: 10),
-                      ],
-                    ),
-                  ),
-                ),
+                FliterBarButton(),
+                SizedBox(height: 5),
                 Divider(color: Colors.grey[400], thickness: 1.5, height: 10),
                 SizedBox(height: 10),
+                _showSearchBar ? SearchBar() : SizedBox.shrink(),
+                SizedBox(height: 15),
                 AnimeList(),
               ],
             ),
@@ -192,90 +112,4 @@ class _TvSeriesState extends State<TvSeries> {
       ),
     );
   }
-
-  buildShowDialog(BuildContext context) {
-    return showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            content: StatefulBuilder(
-              builder: (BuildContext context, StateSetter setState) {
-                return Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Choose your list order',
-                      style: TextStyle(
-                        color: Colors.black87,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 15,
-                      ),
-                    ),
-                    SizedBox(height: 30),
-                    Column(
-                      children: _filterGroup
-                          .map(
-                            (value) => Column(
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Text(value.text),
-                                        SizedBox(width: 10),
-                                        value.icon,
-                                      ],
-                                    ),
-                                    Radio(
-                                      value: value.index,
-                                      groupValue: _rg,
-                                      materialTapTargetSize:
-                                          MaterialTapTargetSize.shrinkWrap,
-                                      onChanged: (data) {
-                                        setState(() {
-                                          _rg = data;
-                                          Provider.of<TvSeriesFilterProvider>(
-                                                  context)
-                                              .editFilter(
-                                            Provider.of<TvSeriesFilterProvider>(
-                                                    context)
-                                                .onGoing,
-                                            value.text,
-                                          );
-                                          _activatedOrderBy = value.text;
-                                        });
-                                        Navigator.pop(context);
-                                      },
-                                      activeColor: Colors.blue[500],
-                                    ),
-                                  ],
-                                ),
-                                Divider(
-                                  height: 7,
-                                  color: Colors.grey[400],
-                                )
-                              ],
-                            ),
-                          )
-                          .toList(),
-                    ),
-                    SizedBox(height: 20)
-                  ],
-                );
-              },
-            ),
-          );
-        });
-  }
-}
-
-class RadioGroup {
-  final int index;
-  final String text;
-  final Object icon;
-
-  RadioGroup({this.index, this.icon, this.text});
 }

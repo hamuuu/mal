@@ -132,14 +132,32 @@ class Logo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 140,
-      width: 150,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        color: Colors.white70,
-        image: DecorationImage(image: AssetImage('assets/logo.png')),
-      ),
+    return Stack(
+      children: [
+        RotationTransition(
+          turns: AlwaysStoppedAnimation(45 / 360),
+          child: Container(
+            height: 140,
+            width: 150,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(5),
+              gradient: LinearGradient(
+                colors: [
+                  Colors.white24,
+                  Colors.white,
+                ],
+              ),
+            ),
+          ),
+        ),
+        Container(
+          height: 140,
+          width: 150,
+          decoration: BoxDecoration(
+            image: DecorationImage(image: AssetImage('assets/logo.png')),
+          ),
+        ),
+      ],
     );
   }
 }

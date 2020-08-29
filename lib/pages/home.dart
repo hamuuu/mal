@@ -22,6 +22,9 @@ class Home extends StatelessWidget {
               Carousel(),
             ],
           ),
+          Divider(
+            color: Colors.grey[400],
+          ),
           HomeMenu(),
           SizedBox(height: 10),
           Divider(
