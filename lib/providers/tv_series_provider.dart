@@ -7,22 +7,26 @@ import 'package:http/http.dart' as http;
 
 class TvSeriesFilterProvider with ChangeNotifier {
   bool _onGoing = false;
-  String _orderBy;
+  String _orderBy = "Score";
   int _page = 1;
+  String _query;
 
-  Future<AnimeListModel> fetchAnimeList(bool onGoing, String orderBy) async {
+  Future<AnimeListModel> fetchAnimeList(
+      bool onGoing, String orderBy, String query) async {
     String url = 'http://api.jikan.moe/v3/search/anime?type=tv';
     url = url + '&page=' + page.toString();
     if (orderBy == "Score") url = url + '&order_by=score';
     if (orderBy == "Title") url = url + '&order_by=title';
     if (orderBy == "Active Members") url = url + '&order_by=members';
     if (onGoing) url = url + '&status=airing';
+    if (query != null) url = url + '&q=$query';
+    inspect(url);
     final response = await http.get(url);
 
     if (response.statusCode == 200) {
       return AnimeListModel.fromJson(json.decode(response.body));
     } else if (response.statusCode == 429) {
-      return this.fetchAnimeList(onGoing, orderBy);
+      return this.fetchAnimeList(onGoing, orderBy, query);
     } else {
       throw Exception('Failed to load data');
     }
@@ -36,16 +40,17 @@ class TvSeriesFilterProvider with ChangeNotifier {
     if (response.statusCode == 200) {
       return AnimeListModel.fromJson(json.decode(response.body));
     } else if (response.statusCode == 429) {
-      return this.fetchAnimeList(onGoing, orderBy);
+      return this.fetchAnimeList(onGoing, orderBy, query);
     } else {
       throw Exception('Failed to load data');
     }
   }
 
-  void editFilter(bool onGoing, String orderBy, int page) {
+  void editFilter(bool onGoing, String orderBy, int page, String query) {
     _onGoing = onGoing;
     _orderBy = orderBy;
     _page = page;
+    _query = query;
     notifyListeners();
   }
 
@@ -53,10 +58,12 @@ class TvSeriesFilterProvider with ChangeNotifier {
     _onGoing = false;
     _orderBy = "Score";
     _page = 1;
+    _query = null;
     notifyListeners();
   }
 
   bool get onGoing => _onGoing;
   String get orderBy => _orderBy;
   int get page => _page;
+  String get query => _query;
 }

@@ -20,8 +20,10 @@ class _AnimeListState extends State<AnimeList> {
   Widget build(BuildContext context) {
     Future<AnimeListModel> _futureAnimeList =
         Provider.of<TvSeriesFilterProvider>(context).fetchAnimeList(
-            Provider.of<TvSeriesFilterProvider>(context).onGoing,
-            Provider.of<TvSeriesFilterProvider>(context).orderBy);
+      Provider.of<TvSeriesFilterProvider>(context).onGoing,
+      Provider.of<TvSeriesFilterProvider>(context).orderBy,
+      Provider.of<TvSeriesFilterProvider>(context).query,
+    );
     return FutureBuilder(
       future: _futureAnimeList,
       builder: (context, snapshot) {

@@ -79,7 +79,8 @@ class _FliterBarButtonState extends State<FliterBarButton> {
                 ).editFilter(
                     !Provider.of<TvSeriesFilterProvider>(context).onGoing,
                     Provider.of<TvSeriesFilterProvider>(context).orderBy,
-                    1);
+                    1,
+                    Provider.of<TvSeriesFilterProvider>(context).query);
               },
               splashColor: Colors.grey[600],
               child: Text(
@@ -173,12 +174,14 @@ class _FliterBarButtonState extends State<FliterBarButton> {
                                           Provider.of<TvSeriesFilterProvider>(
                                                   context)
                                               .editFilter(
-                                            Provider.of<TvSeriesFilterProvider>(
-                                                    context)
-                                                .onGoing,
-                                            value.text,
-                                            1,
-                                          );
+                                                  Provider.of<TvSeriesFilterProvider>(
+                                                          context)
+                                                      .onGoing,
+                                                  value.text,
+                                                  1,
+                                                  Provider.of<TvSeriesFilterProvider>(
+                                                          context)
+                                                      .query);
                                           _activatedOrderBy = value.text;
                                         });
                                         Navigator.pop(context);

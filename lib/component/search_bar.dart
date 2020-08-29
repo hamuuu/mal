@@ -96,29 +96,61 @@ class _SearchBarState extends State<SearchBar> {
                     if (snapshot.data.animes.length > 0 && _isSearched)
                       return Container(
                         decoration: BoxDecoration(
-                          color: Colors.grey[300],
+                          color: Colors.grey[200],
                           border: Border(
                             left: BorderSide(
                               color: Colors.black54,
-                              width: 1,
+                              width: 0.5,
                             ),
                             right: BorderSide(
                               color: Colors.black54,
-                              width: 1,
+                              width: 0.5,
                             ),
                             bottom: BorderSide(
                               color: Colors.black54,
-                              width: 1,
+                              width: 0.5,
                             ),
                           ),
                         ),
-                        child: ListView.builder(
-                          itemCount: snapshot.data.animes.length,
-                          physics: NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          itemBuilder: (context, index) {
-                            return Text(snapshot.data.animes[index].title);
-                          },
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            ListView.builder(
+                              itemCount: snapshot.data.animes.length,
+                              physics: NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemBuilder: (context, index) {
+                                return Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text(
+                                          snapshot.data.animes[index].title),
+                                    ),
+                                    Divider(
+                                      height: 2,
+                                      color: Colors.grey,
+                                    )
+                                  ],
+                                );
+                              },
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  top: 14.0, bottom: 14, left: 10.0),
+                              child: InkWell(
+                                splashColor: Colors.grey,
+                                onTap: () => searchMore(),
+                                child: Text(
+                                  'More results...',
+                                  style: TextStyle(
+                                    color: Colors.blue[400],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       );
                     else
@@ -131,5 +163,15 @@ class _SearchBarState extends State<SearchBar> {
         ),
       ),
     );
+  }
+
+  void searchMore() {
+    Provider.of<TvSeriesFilterProvider>(context).editFilter(
+      false,
+      null,
+      1,
+      _controller.text,
+    );
+    Navigator.pop(context);
   }
 }

@@ -15,7 +15,8 @@ class Paging extends StatelessWidget {
                   Provider.of<TvSeriesFilterProvider>(context).editFilter(
                       Provider.of<TvSeriesFilterProvider>(context).onGoing,
                       Provider.of<TvSeriesFilterProvider>(context).orderBy,
-                      1);
+                      1,
+                      Provider.of<TvSeriesFilterProvider>(context).query);
                 },
                 child: Text(
                   "First Page",
@@ -32,7 +33,8 @@ class Paging extends StatelessWidget {
                   Provider.of<TvSeriesFilterProvider>(context).editFilter(
                       Provider.of<TvSeriesFilterProvider>(context).onGoing,
                       Provider.of<TvSeriesFilterProvider>(context).orderBy,
-                      Provider.of<TvSeriesFilterProvider>(context).page - 1);
+                      Provider.of<TvSeriesFilterProvider>(context).page - 1,
+                      Provider.of<TvSeriesFilterProvider>(context).query);
                 },
                 child: Text(
                   "Prev 50",
@@ -48,7 +50,8 @@ class Paging extends StatelessWidget {
             Provider.of<TvSeriesFilterProvider>(context).editFilter(
                 Provider.of<TvSeriesFilterProvider>(context).onGoing,
                 Provider.of<TvSeriesFilterProvider>(context).orderBy,
-                Provider.of<TvSeriesFilterProvider>(context).page + 1);
+                Provider.of<TvSeriesFilterProvider>(context).page + 1,
+                Provider.of<TvSeriesFilterProvider>(context).query);
           },
           child: Text(
             "Next 50",
