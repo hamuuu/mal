@@ -93,12 +93,17 @@ class _FliterBarButtonState extends State<FliterBarButton> {
             ),
             SizedBox(width: 10),
             FlatButton(
-              color: Colors.grey[400],
+              color: Provider.of<TvSeriesFilterProvider>(context).query != null
+                  ? Colors.green[400]
+                  : Colors.grey[400],
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20),
               ),
               onPressed: () {
-                Navigator.of(context).push(_buildSearchPage(context));
+                Provider.of<TvSeriesFilterProvider>(context).query != null
+                    ? Provider.of<TvSeriesFilterProvider>(context)
+                        .removeSearch()
+                    : Navigator.of(context).push(_buildSearchPage(context));
               },
               splashColor: Colors.grey[600],
               child: Icon(Icons.search),

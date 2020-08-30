@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mal/pages/bottom_navbar.dart';
+import 'package:mal/pages/anime_detail.dart';
 import 'package:mal/pages/login.dart';
 import 'package:mal/pages/services/movies.dart';
 import 'package:mal/pages/services/tv_series.dart';
@@ -24,6 +25,11 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case 'movie':
       return MaterialPageRoute(
         builder: (context) => Movie(),
+      );
+      break;
+    case 'detail':
+      return MaterialPageRoute(
+        builder: (context) => DetailAnime(),
       );
       break;
 

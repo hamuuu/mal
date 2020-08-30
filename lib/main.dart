@@ -1,3 +1,4 @@
+import 'package:mal/providers/anime_detail_provider.dart';
 import 'package:mal/providers/mal_account_provider.dart';
 import 'package:mal/providers/tv_series_provider.dart';
 import 'package:provider/provider.dart';
@@ -14,6 +15,7 @@ void main() {
         ChangeNotifierProvider(create: (context) => Auth()),
         ChangeNotifierProvider(create: (context) => MalAccountProvider()),
         ChangeNotifierProvider(create: (context) => TvSeriesFilterProvider()),
+        ChangeNotifierProvider(create: (context) => AnimeDetailProvider()),
       ],
       child: MaterialApp(
         theme: ThemeData(

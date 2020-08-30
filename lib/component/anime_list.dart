@@ -7,6 +7,7 @@ import 'package:mal/model/anime_list_model.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:mal/providers/anime_detail_provider.dart';
 import 'package:mal/providers/tv_series_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -70,66 +71,79 @@ class _AnimeListState extends State<AnimeList> {
                               ),
                               SizedBox(width: 10),
                               Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      '${snapshot.data.animes[index].title}',
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 15,
-                                      ),
-                                      maxLines: 2,
-                                    ),
-                                    SizedBox(height: 5),
-                                    Row(
-                                      children: [
-                                        KoukiconsStar(height: 12),
-                                        Text(
-                                          snapshot.data.animes[index].score
-                                              .toString(),
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.black87,
-                                          ),
-                                          maxLines: 1,
+                                child: InkWell(
+                                  onTap: () {
+                                    Provider.of<AnimeDetailProvider>(context)
+                                        .setIdAndTitle(
+                                            snapshot.data.animes[index].malId
+                                                .toString(),
+                                            snapshot.data.animes[index].title);
+                                    Navigator.pushNamed(context, 'detail');
+                                  },
+                                  splashColor: Colors.blue[400],
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        '${snapshot.data.animes[index].title}',
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 15,
                                         ),
-                                      ],
-                                    ),
-                                    SizedBox(height: 5),
-                                    Text(
-                                      snapshot.data.animes[index].rated != null
-                                          ? snapshot.data.animes[index].rated
-                                          : '',
-                                      style: TextStyle(
-                                        fontSize: 10,
-                                        color: Colors.red[400],
+                                        maxLines: 2,
                                       ),
-                                    ),
-                                    SizedBox(height: 10),
-                                    Text(
-                                      snapshot.data.animes[index].synopsis,
-                                      style: TextStyle(
-                                        fontSize: 10,
-                                        color: Colors.black54,
+                                      SizedBox(height: 5),
+                                      Row(
+                                        children: [
+                                          KoukiconsStar(height: 12),
+                                          Text(
+                                            snapshot.data.animes[index].score
+                                                .toString(),
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.black87,
+                                            ),
+                                            maxLines: 1,
+                                          ),
+                                        ],
                                       ),
-                                      overflow: TextOverflow.ellipsis,
-                                      maxLines: 4,
-                                    ),
-                                    SizedBox(height: 10),
-                                    Text(
-                                      'Click here for more',
-                                      style: TextStyle(
-                                        fontSize: 10,
-                                        color: Colors.blue[300],
-                                        decoration: TextDecoration.underline,
+                                      SizedBox(height: 5),
+                                      Text(
+                                        snapshot.data.animes[index].rated !=
+                                                null
+                                            ? snapshot.data.animes[index].rated
+                                            : '',
+                                        style: TextStyle(
+                                          fontSize: 10,
+                                          color: Colors.red[400],
+                                        ),
                                       ),
-                                      overflow: TextOverflow.ellipsis,
-                                      maxLines: 4,
-                                    ),
-                                  ],
+                                      SizedBox(height: 10),
+                                      Text(
+                                        snapshot.data.animes[index].synopsis,
+                                        style: TextStyle(
+                                          fontSize: 10,
+                                          color: Colors.black54,
+                                        ),
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 4,
+                                      ),
+                                      SizedBox(height: 10),
+                                      Text(
+                                        'Click here for more',
+                                        style: TextStyle(
+                                          fontSize: 10,
+                                          color: Colors.blue[300],
+                                          decoration: TextDecoration.underline,
+                                        ),
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 4,
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ],

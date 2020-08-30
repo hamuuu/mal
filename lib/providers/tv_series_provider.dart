@@ -20,7 +20,6 @@ class TvSeriesFilterProvider with ChangeNotifier {
     if (orderBy == "Active Members") url = url + '&order_by=members';
     if (onGoing) url = url + '&status=airing';
     if (query != null) url = url + '&q=$query';
-    inspect(url);
     final response = await http.get(url);
 
     if (response.statusCode == 200) {
@@ -28,7 +27,7 @@ class TvSeriesFilterProvider with ChangeNotifier {
     } else if (response.statusCode == 429) {
       return this.fetchAnimeList(onGoing, orderBy, query);
     } else {
-      throw Exception('Failed to load data');
+      return this.fetchAnimeList(onGoing, orderBy, query);
     }
   }
 
@@ -42,7 +41,19 @@ class TvSeriesFilterProvider with ChangeNotifier {
     } else if (response.statusCode == 429) {
       return this.fetchAnimeList(onGoing, orderBy, query);
     } else {
-      throw Exception('Failed to load data');
+      throw Container(
+        child: Center(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text('Failed to load data. Click here to reload'),
+              IconButton(
+                  icon: Icon(Icons.arrow_drop_down_circle),
+                  onPressed: () => this.fetchAnimeList(onGoing, orderBy, query))
+            ],
+          ),
+        ),
+      );
     }
   }
 
@@ -58,6 +69,11 @@ class TvSeriesFilterProvider with ChangeNotifier {
     _onGoing = false;
     _orderBy = "Score";
     _page = 1;
+    _query = null;
+    notifyListeners();
+  }
+
+  void removeSearch() {
     _query = null;
     notifyListeners();
   }
