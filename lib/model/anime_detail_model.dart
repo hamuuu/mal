@@ -24,6 +24,7 @@ class Anime {
   int popularity;
   int members;
   int favorites;
+  String premiered;
   String synopsis;
   List<Producers> producers;
   List<Licensors> licensors;
@@ -56,6 +57,7 @@ class Anime {
       this.popularity,
       this.members,
       this.favorites,
+      this.premiered,
       this.synopsis,
       this.producers,
       this.licensors,
@@ -88,6 +90,7 @@ class Anime {
     popularity = json['popularity'];
     members = json['members'];
     favorites = json['favorites'];
+    premiered = json['premiered'];
     synopsis = json['synopsis'];
     if (json['producers'] != null) {
       producers = new List<Producers>();
