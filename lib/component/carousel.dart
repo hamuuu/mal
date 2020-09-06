@@ -57,7 +57,7 @@ class _CarouselState extends State<Carousel> {
                 _current = index;
               });
             },
-            height: MediaQuery.of(context).size.height * 0.28,
+            height: MediaQuery.of(context).size.height * 0.25,
             viewportFraction: 0.8,
             initialPage: 0,
             enableInfiniteScroll: true,

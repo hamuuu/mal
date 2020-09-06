@@ -26,7 +26,6 @@ class Home extends StatelessWidget {
             color: Colors.grey[400],
           ),
           HomeMenu(),
-          SizedBox(height: 10),
           Divider(
             color: Colors.grey[400],
           ),

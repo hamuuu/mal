@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mal/pages/bottom_navbar.dart';
 import 'package:mal/pages/anime_detail.dart';
 import 'package:mal/pages/login.dart';
+import 'package:mal/pages/review.dart';
 import 'package:mal/pages/services/movies.dart';
 import 'package:mal/pages/services/tv_series.dart';
 
@@ -30,6 +31,11 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case 'detail':
       return MaterialPageRoute(
         builder: (context) => DetailAnime(),
+      );
+      break;
+    case 'review':
+      return MaterialPageRoute(
+        builder: (context) => AnimeReview(),
       );
       break;
 

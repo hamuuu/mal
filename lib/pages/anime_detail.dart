@@ -1,8 +1,14 @@
 import 'dart:developer';
+import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:mal/model/anime_detail_model.dart';
 import 'package:mal/providers/anime_detail_provider.dart';
+import 'package:mal/providers/anime_review_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -14,361 +20,486 @@ class DetailAnime extends StatelessWidget {
     Future<Anime> _futureAnimeDetail = Provider.of<AnimeDetailProvider>(context)
         .fetchAnimeDetail(Provider.of<AnimeDetailProvider>(context).id);
     return Scaffold(
-      body: CustomScrollView(slivers: [
-        SliverAppBar(
-          iconTheme: IconThemeData(color: Colors.white),
-          centerTitle: true,
-          title: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(height: 25),
-              Text(
-                Provider.of<AnimeDetailProvider>(context).title,
-                style: TextStyle(
-                  color: Colors.white70,
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              SizedBox(height: 10),
-            ],
-          ),
-          leading: Padding(
-            padding: const EdgeInsets.only(top: 10),
-            child: IconButton(
-              icon: Icon(Icons.arrow_back_ios),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
-          ),
-          automaticallyImplyLeading: false,
-          actions: [
-            Container(
-              padding: const EdgeInsets.only(right: 10, top: 8),
-              child: Image(
-                image: AssetImage('assets/logo-appbar.png'),
-              ),
-            )
-          ],
-          floating: true,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(
-              bottom: Radius.circular(20),
-            ),
-          ),
-          flexibleSpace: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.vertical(
-                bottom: Radius.circular(20),
-              ),
-              gradient: LinearGradient(
-                colors: [Colors.blue[300], Colors.blue[200]],
-                stops: [0.5, 1.0],
-              ),
-            ),
-          ),
-          expandedHeight: 70,
-        ),
-        SliverToBoxAdapter(
-          child: FutureBuilder(
-            future: _futureAnimeDetail,
-            builder: (context, snapshot) {
-              inspect(snapshot.data);
-              StringBuffer listGenre = StringBuffer();
-              StringBuffer listStudio = StringBuffer();
-
-              if (snapshot.hasData) {
-                listToString(snapshot.data.genres, listGenre);
-                listToString(snapshot.data.studios, listStudio);
-                return Column(
-                  children: [
-                    SizedBox(
-                      height: 20,
+      body: Stack(
+        children: [
+          CustomScrollView(
+            physics: BouncingScrollPhysics(),
+            slivers: [
+              SliverAppBar(
+                flexibleSpace: Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [Colors.blue[300], Colors.blue[200]],
+                      stops: [0.5, 1.0],
                     ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                  ),
+                ),
+                iconTheme: IconThemeData(color: Colors.white),
+                centerTitle: true,
+                title: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      Provider.of<AnimeDetailProvider>(context).title,
+                      style: TextStyle(
+                        color: Colors.white70,
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+                leading: IconButton(
+                  icon: Icon(Icons.arrow_back_ios),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+                automaticallyImplyLeading: false,
+                actions: [
+                  Container(
+                    padding: const EdgeInsets.only(right: 10, top: 5),
+                    child: Image(
+                      image: AssetImage('assets/logo-appbar.png'),
+                    ),
+                  )
+                ],
+                floating: true,
+              ),
+              SliverToBoxAdapter(
+                child: FutureBuilder(
+                  future: _futureAnimeDetail,
+                  builder: (context, snapshot) {
+                    StringBuffer listStudio = StringBuffer();
+                    StringBuffer listProducer = StringBuffer();
+                    StringBuffer listLicensor = StringBuffer();
+
+                    if (snapshot.hasData) {
+                      listToString(snapshot.data.studios, listStudio);
+
+                      listToString(snapshot.data.producers, listProducer);
+
+                      listToString(snapshot.data.licensors, listLicensor);
+
+                      return Column(
                         children: [
                           Container(
-                            width: MediaQuery.of(context).size.width * 0.4,
-                            child: Container(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Image(
-                                    image: NetworkImage(
-                                      snapshot.data.imageUrl,
-                                    ),
-                                    fit: BoxFit.fill,
-                                  ),
-                                  SizedBox(height: 8),
-                                  Container(
-                                    child: Text(
-                                      snapshot.data.title,
-                                      style: TextStyle(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(height: 4),
-                                  Divider(color: Colors.black54),
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      gradient: LinearGradient(
-                                        colors: [
-                                          Colors.blue[500],
-                                          Colors.blue[300],
-                                        ],
-                                      ),
-                                    ),
-                                    constraints: BoxConstraints(
-                                      minHeight: 150,
-                                    ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(6.0),
-                                      child: Column(
-                                        children: [
-                                          Text(
-                                            'Alternative title',
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          Divider(color: Colors.white70),
-                                          snapshot.data.titleEnglish != null
-                                              ? Text(
-                                                  '${snapshot.data.titleEnglish} - English',
-                                                  style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 12,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                )
-                                              : SizedBox.shrink(),
-                                          SizedBox(height: 10),
-                                          snapshot.data.titleJapanese != null
-                                              ? Text(
-                                                  '${snapshot.data.titleJapanese} - Japanese',
-                                                  style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 12,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                )
-                                              : SizedBox.shrink(),
-                                          SizedBox(height: 10),
-                                        ],
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          ),
-                          SizedBox(width: 5),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.max,
+                            height: MediaQuery.of(context).size.height * 0.4,
+                            child: Stack(
                               children: [
-                                AnimeInfo(
-                                  desc: 'Score',
-                                  value: snapshot.data.score.toString(),
-                                ),
-                                AnimeInfo(
-                                  desc: 'Scored by',
-                                  value: snapshot.data.scoredBy != null
-                                      ? oCcy.format(snapshot.data.scoredBy)
-                                      : "null",
-                                ),
-                                AnimeInfo(
-                                  desc: 'Rank',
-                                  value: snapshot.data.rank.toString(),
-                                ),
-                                AnimeInfo(
-                                  desc: 'Popularity',
-                                  value: snapshot.data.popularity.toString(),
-                                ),
-                                AnimeInfo(
-                                  desc: 'Members',
-                                  value: snapshot.data.members != null
-                                      ? oCcy.format(snapshot.data.members)
-                                      : "null",
-                                ),
-                                AnimeInfo(
-                                  desc: 'Favorited by',
-                                  value: snapshot.data.favorites != null
-                                      ? oCcy.format(snapshot.data.favorites)
-                                      : "null",
-                                ),
-                                AnimeInfo(
-                                  desc: 'Episodes',
-                                  value: snapshot.data.episodes.toString(),
-                                ),
-                                AnimeInfo(
-                                  desc: 'Type',
-                                  value: snapshot.data.type,
-                                ),
-                                AnimeInfo(
-                                  desc: 'Duration',
-                                  value: snapshot.data.duration,
-                                ),
-                                AnimeInfo(
-                                  desc: 'Status',
-                                  value: snapshot.data.status,
-                                ),
-                                AnimeInfo(
-                                  desc: 'Premiered',
-                                  value: snapshot.data.premiered,
-                                ),
-                                AnimeInfo(
-                                  desc: 'Source',
-                                  value: snapshot.data.source,
-                                ),
-                                SizedBox(height: 20),
-                                InkWell(
-                                  splashColor: Colors.blue,
-                                  onTap: () async {
-                                    if (await canLaunch(snapshot.data.url)) {
-                                      await launch(
-                                        snapshot.data.url,
-                                        forceWebView: true,
-                                        enableJavaScript: true,
-                                      );
-                                    } else {
-                                      throw 'Couldn\'t launch';
-                                    }
-                                  },
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        'Visit Page in MAL',
-                                        style: TextStyle(
-                                          color: Colors.blue[400],
-                                          decoration: TextDecoration.underline,
+                                CachedFrostedBox(
+                                  opaqueBackground: Container(
+                                    color: Colors.white,
+                                  ),
+                                  sigmaX: 3.0,
+                                  sigmaY: 3.0,
+                                  child: Container(
+                                    width: MediaQuery.of(context).size.width,
+                                    height: MediaQuery.of(context).size.height *
+                                        0.3,
+                                    decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                        colorFilter: ColorFilter.mode(
+                                          Colors.grey[600],
+                                          BlendMode.modulate,
                                         ),
+                                        image: NetworkImage(
+                                            snapshot.data.imageUrl),
+                                        fit: BoxFit.fitWidth,
                                       ),
-                                      Icon(
-                                        Icons.keyboard_arrow_right,
+                                    ),
+                                  ),
+                                ),
+                                // Container(
+                                //   width: MediaQuery.of(context).size.width,
+                                //   height: MediaQuery.of(context).size.height * 0.3,
+                                //   decoration: BoxDecoration(
+                                //     image: DecorationImage(
+                                //       colorFilter: ColorFilter.mode(
+                                //         Colors.black,
+                                //         BlendMode.saturation,
+                                //       ),
+                                //       image: NetworkImage(snapshot.data.imageUrl),
+                                //       fit: BoxFit.fitWidth,
+                                //     ),
+                                //   ),
+                                // ),
+                                Positioned(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.4,
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.3,
+                                  top: 60,
+                                  left: MediaQuery.of(context).size.width * 0.3,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
                                         color: Colors.blue[400],
-                                        size: 13,
+                                        style: BorderStyle.solid,
+                                        width: 2,
                                       ),
-                                    ],
+                                    ),
+                                    child: Image(
+                                      image: NetworkImage(
+                                        snapshot.data.imageUrl,
+                                      ),
+                                      fit: BoxFit.fill,
+                                    ),
                                   ),
                                 )
                               ],
                             ),
                           ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Container(
+                                width: MediaQuery.of(context).size.width * 0.8,
+                                child: Text(
+                                  snapshot.data.title,
+                                  style: GoogleFonts.montserrat(
+                                    textStyle: TextStyle(
+                                      color: Colors.black87,
+                                      fontSize: 20,
+                                    ),
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                              SizedBox(height: 5),
+                              snapshot.data.titleEnglish != null
+                                  ? Container(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.8,
+                                      child: Text(
+                                        snapshot.data.titleEnglish,
+                                        style: GoogleFonts.raleway(
+                                          textStyle: TextStyle(
+                                            color: Colors.black45,
+                                            fontSize: 14,
+                                          ),
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    )
+                                  : SizedBox.shrink(),
+                              SizedBox(height: 5),
+                              snapshot.data.titleJapanese != null
+                                  ? Container(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.8,
+                                      child: Text(
+                                        snapshot.data.titleJapanese,
+                                        style: GoogleFonts.raleway(
+                                          textStyle: TextStyle(
+                                            color: Colors.black45,
+                                            fontSize: 14,
+                                          ),
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    )
+                                  : SizedBox.shrink(),
+                              SizedBox(height: 10),
+                              Container(
+                                width: MediaQuery.of(context).size.width * 0.8,
+                                child: Wrap(
+                                  direction: Axis.horizontal,
+                                  alignment: WrapAlignment.center,
+                                  children: snapshot.data.genres
+                                      .map<Widget>(
+                                        (genre) => Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 5.0,
+                                            vertical: 3,
+                                          ),
+                                          child: Container(
+                                              decoration: BoxDecoration(
+                                                color: Colors.blueGrey[600],
+                                                borderRadius:
+                                                    BorderRadius.circular(5),
+                                              ),
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(5.0),
+                                                child: Text(
+                                                  genre.name,
+                                                  style: GoogleFonts.dosis(
+                                                    textStyle: TextStyle(
+                                                      color: Colors.white,
+                                                    ),
+                                                  ),
+                                                ),
+                                              )),
+                                        ),
+                                      )
+                                      .toList(),
+                                ),
+                              )
+                            ],
+                          ),
+                          Divider(),
+                          Card(
+                            child: Container(
+                              width: MediaQuery.of(context).size.width * 1,
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  colors: [
+                                    Colors.blue[300],
+                                    Colors.blue[400],
+                                  ],
+                                ),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 10.0,
+                                  vertical: 12.0,
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Synopsis',
+                                      style: GoogleFonts.ptSans(
+                                        textStyle: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 15,
+                                        ),
+                                      ),
+                                      textAlign: TextAlign.justify,
+                                    ),
+                                    Divider(
+                                      color: Colors.white70,
+                                    ),
+                                    Text(
+                                      snapshot.data.synopsis,
+                                      style: GoogleFonts.ptSans(
+                                        textStyle: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 13,
+                                        ),
+                                      ),
+                                      textAlign: TextAlign.justify,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          Divider(),
+                          Padding(
+                            padding: const EdgeInsets.all(5.0),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  colors: [
+                                    Colors.black54,
+                                    Colors.black45,
+                                  ],
+                                ),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                  children: [
+                                    SizedBox(height: 8),
+                                    AnimeInfoList(
+                                      desc: 'Studios',
+                                      value: listStudio.toString(),
+                                    ),
+                                    Divider(color: Colors.white, thickness: 1),
+                                    SizedBox(height: 8),
+                                    AnimeInfoList(
+                                      desc: 'Licensors',
+                                      value: listLicensor.toString(),
+                                    ),
+                                    Divider(color: Colors.white, thickness: 1),
+                                    SizedBox(height: 8),
+                                    AnimeInfoList(
+                                      desc: 'Producers',
+                                      value: listProducer.toString(),
+                                    ),
+                                    SizedBox(height: 8),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          Divider(),
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 5.0),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisSize: MainAxisSize.max,
+                                    children: [
+                                      AnimeInfo(
+                                        desc: 'Score',
+                                        value: snapshot.data.score.toString(),
+                                      ),
+                                      AnimeInfo(
+                                        desc: 'Scored by',
+                                        value: snapshot.data.scoredBy != null
+                                            ? oCcy.format(
+                                                    snapshot.data.scoredBy) +
+                                                ' Users'
+                                            : "null",
+                                      ),
+                                      AnimeInfo(
+                                        desc: 'Rank',
+                                        value: snapshot.data.rank.toString(),
+                                      ),
+                                      AnimeInfo(
+                                        desc: 'Popularity',
+                                        value:
+                                            snapshot.data.popularity.toString(),
+                                      ),
+                                      AnimeInfo(
+                                        desc: 'Members',
+                                        value: snapshot.data.members != null
+                                            ? oCcy.format(
+                                                    snapshot.data.members) +
+                                                ' Users'
+                                            : "null",
+                                      ),
+                                      AnimeInfo(
+                                        desc: 'Favorited by',
+                                        value: snapshot.data.favorites != null
+                                            ? oCcy.format(
+                                                    snapshot.data.favorites) +
+                                                ' Users'
+                                            : "null",
+                                      ),
+                                      AnimeInfo(
+                                        desc: 'Episodes',
+                                        value:
+                                            snapshot.data.episodes.toString() +
+                                                ' Episode',
+                                      ),
+                                      AnimeInfo(
+                                        desc: 'Type',
+                                        value: snapshot.data.type,
+                                      ),
+                                      AnimeInfo(
+                                        desc: 'Duration',
+                                        value: snapshot.data.duration,
+                                      ),
+                                      AnimeInfo(
+                                        desc: 'Status',
+                                        value: snapshot.data.status,
+                                      ),
+                                      AnimeInfo(
+                                        desc: 'Premiered',
+                                        value: snapshot.data.premiered,
+                                      ),
+                                      AnimeInfo(
+                                        desc: 'Source',
+                                        value: snapshot.data.source,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Divider(),
+                          SizedBox(height: 20),
+                        ],
+                      );
+                    } else {
+                      return Center(
+                        child: Column(
+                          children: [
+                            SizedBox(height: 80),
+                            CircularProgressIndicator(),
+                          ],
+                        ),
+                      );
+                    }
+                  },
+                ),
+              )
+            ],
+          ),
+          FutureBuilder(
+              future: _futureAnimeDetail,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return Align(
+                    alignment: Alignment.bottomRight,
+                    child: new Container(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.08,
+                            width: MediaQuery.of(context).size.width * 0.2,
+                            child: RaisedButton(
+                              color: Colors.pink[400],
+                              child: Text(
+                                'Review',
+                                style: GoogleFonts.montserrat(
+                                  textStyle: TextStyle(
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                              splashColor: Colors.pink[300],
+                              onPressed: () {
+                                Provider.of<AnimeReviewProvider>(context)
+                                    .setEpisode(
+                                        snapshot.data.episodes.toString());
+                                Navigator.pushNamed(context, 'review');
+                              },
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(90.0),
+                                  side: BorderSide(color: Colors.white70)),
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.08,
+                            width: MediaQuery.of(context).size.width * 0.35,
+                            child: RaisedButton(
+                              color: Colors.pink[400],
+                              child: Text(
+                                'Recommendation',
+                                style: GoogleFonts.montserrat(
+                                  textStyle: TextStyle(
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                              onPressed: () {},
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(90.0),
+                                  side: BorderSide(color: Colors.white70)),
+                            ),
+                          ),
+                          SizedBox(height: 20),
                         ],
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-                              Colors.blue[500],
-                              Colors.blue[300],
-                            ],
-                          ),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            children: [
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.max,
-                                children: [
-                                  Container(
-                                    width: 100,
-                                    child: Text(
-                                      'Genres',
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: Text(
-                                      listGenre.toString(),
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: 15),
-                              Row(
-                                mainAxisSize: MainAxisSize.max,
-                                children: [
-                                  Container(
-                                    width: 100,
-                                    child: Text(
-                                      'Studios',
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: Text(
-                                      listStudio.toString(),
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 20),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Container(
-                        width: MediaQuery.of(context).size.width * 1,
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-                              Colors.blueGrey[400],
-                              Colors.blue[300],
-                            ],
-                          ),
-                        ),
-                        child: SizedBox(
-                          height: 30,
-                        ),
-                      ),
-                    )
-                  ],
-                );
-              } else {
-                return Center(
-                  child: Column(
-                    children: [
-                      SizedBox(height: 80),
-                      CircularProgressIndicator(),
-                    ],
-                  ),
-                );
-              }
-            },
-          ),
-        )
-      ]),
+                  );
+                } else {
+                  return SizedBox.shrink();
+                }
+              }),
+        ],
+      ),
     );
   }
 
@@ -378,6 +509,52 @@ class DetailAnime extends StatelessWidget {
           ? string.write(item.name + ', ')
           : string.write(item.name);
     });
+  }
+}
+
+class AnimeInfoList extends StatelessWidget {
+  const AnimeInfoList({
+    Key key,
+    @required this.desc,
+    @required this.value,
+  }) : super(key: key);
+
+  final String desc;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.max,
+      children: [
+        Container(
+          width: 100,
+          child: Text(
+            desc,
+            style: GoogleFonts.ptSerif(
+              textStyle: TextStyle(
+                color: Colors.white,
+                fontSize: 13,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
+        Expanded(
+          child: Text(
+            value != "null" ? value : '-',
+            style: GoogleFonts.ptSerif(
+              textStyle: TextStyle(
+                color: Colors.white,
+                fontSize: 13,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
   }
 }
 
@@ -399,7 +576,21 @@ class AnimeInfo extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
-          color: Colors.blue[400],
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: Colors.blue[400],
+            ),
+            gradient: LinearGradient(
+              colors: [
+                Colors.blue[300],
+                Colors.blue[400],
+              ],
+            ),
+          ),
+          constraints: BoxConstraints(
+            minWidth: 100,
+            minHeight: 35,
+          ),
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(
@@ -414,21 +605,127 @@ class AnimeInfo extends StatelessWidget {
         ),
         Expanded(
           child: Container(
+            constraints: BoxConstraints(
+              minHeight: 35,
+            ),
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: Colors.blue[400],
+              ),
+            ),
             alignment: Alignment.centerRight,
-            color: Colors.white,
             child: Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Text(
-                value != "null" ? value : '-',
-                style: TextStyle(
-                  color: Colors.black87,
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+              child: Text(value != "null" ? value : '-',
+                  style: GoogleFonts.anton(
+                    textStyle: TextStyle(
+                      color: Colors.black54,
+                      fontSize: 12,
+                      // fontWeight: FontWeight.bold,
+                    ),
+                  )),
             ),
           ),
         ),
+      ],
+    );
+  }
+}
+
+class CachedFrostedBox extends StatefulWidget {
+  CachedFrostedBox(
+      {@required this.child,
+      this.sigmaX = 8,
+      this.sigmaY = 8,
+      this.opaqueBackground})
+      : this.frostBackground = Stack(
+          children: <Widget>[
+            opaqueBackground,
+            ClipRect(
+                child: BackdropFilter(
+              filter: ui.ImageFilter.blur(sigmaX: sigmaX, sigmaY: sigmaY),
+              child: new Container(
+                  decoration: new BoxDecoration(
+                color: Colors.white.withOpacity(0.1),
+              )),
+            )),
+          ],
+        );
+
+  final Widget child;
+  final double sigmaY;
+  final double sigmaX;
+
+  /// This must be opaque so the backdrop filter won't access any colors beneath this background.
+  final Widget opaqueBackground;
+
+  /// Blur applied to the opaqueBackground. See the constructor.
+  final Widget frostBackground;
+
+  @override
+  State<StatefulWidget> createState() {
+    return CachedFrostedBoxState();
+  }
+}
+
+class CachedFrostedBoxState extends State<CachedFrostedBox> {
+  final GlobalKey _snapshotKey = GlobalKey();
+
+  Image _backgroundSnapshot;
+  bool _snapshotLoaded = false;
+  bool _skipSnapshot = false;
+
+  void _snapshot(Duration _) async {
+    final RenderRepaintBoundary renderBackground =
+        _snapshotKey.currentContext.findRenderObject();
+    final ui.Image image = await renderBackground.toImage(
+      pixelRatio: WidgetsBinding.instance.window.devicePixelRatio,
+    );
+    // !!! The default encoding rawRgba will throw exceptions. This bug is introducing a lot
+    // of encoding/decoding work.
+    final ByteData imageByteData =
+        await image.toByteData(format: ui.ImageByteFormat.png);
+    setState(() {
+      _backgroundSnapshot = Image.memory(imageByteData.buffer.asUint8List());
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    Widget frostedBackground;
+    if (_backgroundSnapshot == null || _skipSnapshot) {
+      frostedBackground = RepaintBoundary(
+        key: _snapshotKey,
+        child: widget.frostBackground,
+      );
+      if (!_skipSnapshot) {
+        SchedulerBinding.instance.addPostFrameCallback(_snapshot);
+      }
+    } else {
+      // !!! We don't seem to have a way to know when IO thread
+      // decoded the image.
+      if (!_snapshotLoaded) {
+        frostedBackground = widget.frostBackground;
+        Future.delayed(Duration(seconds: 1), () {
+          setState(() {
+            _snapshotLoaded = true;
+          });
+        });
+      } else {
+        frostedBackground = Offstage();
+      }
+    }
+
+    return Stack(
+      children: <Widget>[
+        frostedBackground,
+        if (_backgroundSnapshot != null) _backgroundSnapshot,
+        widget.child,
+        GestureDetector(onTap: () {
+          setState(() {
+            _skipSnapshot = !_skipSnapshot;
+          });
+        }),
       ],
     );
   }

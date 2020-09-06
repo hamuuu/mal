@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:mal/model/anime_list_model.dart';
+import 'package:mal/providers/anime_detail_provider.dart';
 import 'package:mal/providers/tv_series_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -80,7 +81,7 @@ class _SearchBarState extends State<SearchBar> {
                         child: IconButton(
                             icon: Icon(Icons.search),
                             onPressed: () {
-                              print(_controller.text);
+                              searchMore();
                             }),
                       ),
                       border: OutlineInputBorder(),
@@ -90,75 +91,143 @@ class _SearchBarState extends State<SearchBar> {
               ],
             ),
             FutureBuilder(
-                future: _futureAnimeList,
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    if (snapshot.data.animes.length > 0 && _isSearched)
-                      return Container(
-                        decoration: BoxDecoration(
-                          color: Colors.grey[200],
-                          border: Border(
-                            left: BorderSide(
-                              color: Colors.black54,
-                              width: 0.5,
-                            ),
-                            right: BorderSide(
-                              color: Colors.black54,
-                              width: 0.5,
-                            ),
-                            bottom: BorderSide(
-                              color: Colors.black54,
-                              width: 0.5,
-                            ),
+              future: _futureAnimeList,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  if (snapshot.data.animes.length > 0 && _isSearched)
+                    return Container(
+                      decoration: BoxDecoration(
+                        color: Colors.grey[200],
+                        border: Border(
+                          left: BorderSide(
+                            color: Colors.black54,
+                            width: 0.5,
+                          ),
+                          right: BorderSide(
+                            color: Colors.black54,
+                            width: 0.5,
+                          ),
+                          bottom: BorderSide(
+                            color: Colors.black54,
+                            width: 0.5,
                           ),
                         ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            ListView.builder(
-                              itemCount: snapshot.data.animes.length,
-                              physics: NeverScrollableScrollPhysics(),
-                              shrinkWrap: true,
-                              itemBuilder: (context, index) {
-                                return Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Padding(
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          ListView.builder(
+                            itemCount: snapshot.data.animes.length,
+                            physics: NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            itemBuilder: (context, index) {
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  InkWell(
+                                    splashColor: Colors.grey[700],
+                                    onTap: () {
+                                      Provider.of<AnimeDetailProvider>(context)
+                                          .setIdAndTitle(
+                                              snapshot.data.animes[index].malId
+                                                  .toString(),
+                                              snapshot
+                                                  .data.animes[index].title);
+                                      Navigator.pushNamed(context, 'detail');
+                                    },
+                                    child: Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: Text(
                                           snapshot.data.animes[index].title),
                                     ),
-                                    Divider(
-                                      height: 2,
-                                      color: Colors.grey,
-                                    )
-                                  ],
-                                );
-                              },
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  top: 14.0, bottom: 14, left: 10.0),
-                              child: InkWell(
-                                splashColor: Colors.grey,
-                                onTap: () => searchMore(),
-                                child: Text(
-                                  'More results...',
-                                  style: TextStyle(
-                                    color: Colors.blue[400],
                                   ),
+                                  Divider(
+                                    height: 2,
+                                    color: Colors.grey,
+                                  )
+                                ],
+                              );
+                            },
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                top: 14.0, bottom: 14, left: 10.0),
+                            child: InkWell(
+                              splashColor: Colors.grey,
+                              onTap: () => searchMore(),
+                              child: Text(
+                                'More results...',
+                                style: TextStyle(
+                                  color: Colors.blue[400],
                                 ),
                               ),
                             ),
-                          ],
+                          ),
+                        ],
+                      ),
+                    );
+                  else
+                    return Container(
+                      decoration: BoxDecoration(
+                        color: Colors.grey[200],
+                        border: Border(
+                          left: BorderSide(
+                            color: Colors.black54,
+                            width: 0.5,
+                          ),
+                          right: BorderSide(
+                            color: Colors.black54,
+                            width: 0.5,
+                          ),
+                          bottom: BorderSide(
+                            color: Colors.black54,
+                            width: 0.5,
+                          ),
                         ),
-                      );
-                    else
-                      return SizedBox.shrink();
-                  } else {
-                    return SizedBox.shrink();
-                  }
-                })
+                      ),
+                      child: Center(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 20.0),
+                          child: Text(
+                            'Input 3 or more character to get the results.',
+                            style: TextStyle(
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                } else if (!snapshot.hasData && _controller.text.length > 2) {
+                  return Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      border: Border(
+                        left: BorderSide(
+                          color: Colors.black54,
+                          width: 0.5,
+                        ),
+                        right: BorderSide(
+                          color: Colors.black54,
+                          width: 0.5,
+                        ),
+                        bottom: BorderSide(
+                          color: Colors.black54,
+                          width: 0.5,
+                        ),
+                      ),
+                    ),
+                    child: Center(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 20.0),
+                        child: CircularProgressIndicator(),
+                      ),
+                    ),
+                  );
+                } else {
+                  return SizedBox.shrink();
+                }
+              },
+            )
           ],
         ),
       ),

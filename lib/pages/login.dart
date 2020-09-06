@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:ui';
 
+import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:mal/providers/auth.dart';
 import 'package:mal/providers/mal_account_provider.dart';
@@ -37,7 +38,8 @@ class _LoginState extends State<Login> {
       resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
-          BackgroundImage(),
+          // BackgroundImage(),
+
           FormLogin(),
         ],
       ),
@@ -54,29 +56,106 @@ class FormLogin extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Container(
-        height: 500,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 30.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Logo(),
-              SizedBox(height: 30),
-              FormTextField(
-                label: 'Username',
-                obscure: false,
+        decoration: BoxDecoration(
+          image: DecorationImage(
+              image: NetworkImage(
+                  'https://www.edlanews.com/wp-content/uploads/2019/01/white-background-geo-shapes.jpg'),
+              fit: BoxFit.fill,
+              colorFilter: ColorFilter.mode(
+                  Colors.black.withOpacity(0.5), BlendMode.dstATop)),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ClipPath(
+              clipper: DiagonalPathClipperTwo(),
+              child: Container(
+                height: MediaQuery.of(context).size.height * 0.3,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      Colors.lightBlue[800],
+                      Colors.lightBlue[100],
+                    ],
+                  ),
+                ),
+                child: Center(
+                  child: Column(
+                    children: [
+                      SizedBox(height: 20),
+                      Logo(),
+                    ],
+                  ),
+                ),
               ),
-              SizedBox(height: 30),
-              FormTextField(
-                label: 'Password',
-                obscure: true,
+            ),
+            Container(
+              height: MediaQuery.of(context).size.height * 0.50,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 10.0, vertical: 15.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(),
+                      padding: EdgeInsets.all(20),
+                      child: Column(
+                        children: [
+                          Text(
+                            'Sign In',
+                            style: GoogleFonts.lato(
+                              textStyle: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black54,
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 20),
+                          FormTextField(
+                            label: 'Username',
+                            obscure: false,
+                          ),
+                          SizedBox(height: 30),
+                          FormTextField(
+                            label: 'Password',
+                            obscure: true,
+                          ),
+                          SizedBox(height: 15),
+                          ActionButton(),
+                        ],
+                      ),
+                    ),
+
+                    // LoginMethod()
+                  ],
+                ),
               ),
-              SizedBox(height: 20),
-              ActionButton(),
-              SizedBox(height: 40),
-              LoginMethod()
-            ],
-          ),
+            ),
+            ClipPath(
+              clipper: WaveClipperOne(reverse: true),
+              child: Container(
+                height: MediaQuery.of(context).size.height * 0.20,
+                width: MediaQuery.of(context).size.width * 1,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      Colors.lightBlue[800],
+                      Colors.lightBlue[100],
+                    ],
+                  ),
+                ),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 16.0),
+                    child: LoginMethod(),
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -96,29 +175,27 @@ class FormTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextField(
-      cursorColor: Colors.white,
+      cursorColor: Colors.black,
       obscureText: obscure,
       style: TextStyle(
-        color: Colors.white,
+        color: Colors.black87,
+        fontSize: 14,
       ),
       decoration: InputDecoration(
         labelText: label,
         contentPadding: EdgeInsets.symmetric(
-          horizontal: 5,
+          horizontal: 15,
           vertical: 3,
         ),
         labelStyle: TextStyle(
-          color: Colors.white,
+          color: Colors.black38,
         ),
         enabledBorder: UnderlineInputBorder(
-          borderSide: BorderSide(
-            color: Colors.white,
-          ),
+          borderSide: BorderSide(color: Colors.blue[300]),
         ),
-        focusedBorder: UnderlineInputBorder(
-          borderSide: BorderSide(
-            color: Colors.white,
-          ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: BorderSide(color: Colors.blue[200]),
         ),
       ),
     );
@@ -132,32 +209,12 @@ class Logo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        RotationTransition(
-          turns: AlwaysStoppedAnimation(45 / 360),
-          child: Container(
-            height: 140,
-            width: 150,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(5),
-              gradient: LinearGradient(
-                colors: [
-                  Colors.white24,
-                  Colors.white,
-                ],
-              ),
-            ),
-          ),
-        ),
-        Container(
-          height: 140,
-          width: 150,
-          decoration: BoxDecoration(
-            image: DecorationImage(image: AssetImage('assets/logo.png')),
-          ),
-        ),
-      ],
+    return Container(
+      height: 160,
+      width: 160,
+      decoration: BoxDecoration(
+        image: DecorationImage(image: AssetImage('assets/bee-logo.png')),
+      ),
     );
   }
 }
@@ -169,62 +226,41 @@ class LoginMethod extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      color: Colors.white,
-      child: Padding(
-        padding: const EdgeInsets.only(
-          top: 8.0,
-          bottom: 8.0,
-          right: 8.0,
-          left: 16,
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        ButtonTheme(
+          buttonColor: Colors.white,
+          minWidth: 30,
+          child: FlatButton(
+            onPressed: () {
+              _googleLogin(context);
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                border: Border.all(color: Colors.white),
+                borderRadius: BorderRadius.circular(50),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Row(
+                  children: [
+                    Text('Sign in with Google    '),
+                    Image(
+                      image: AssetImage(
+                        'assets/login_page/google.png',
+                      ),
+                      height: 30,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
         ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              'Login with',
-              style: GoogleFonts.poppins(
-                textStyle: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
-              ),
-            ),
-            SizedBox(
-              width: 20,
-            ),
-            ButtonTheme(
-              minWidth: 30,
-              height: 50,
-              child: FlatButton(
-                onPressed: () {
-                  _googleLogin(context);
-                },
-                child: Image(
-                  image: AssetImage(
-                    'assets/login_page/google.png',
-                  ),
-                  height: 30,
-                ),
-              ),
-            ),
-            ButtonTheme(
-              minWidth: 30,
-              height: 50,
-              child: FlatButton(
-                onPressed: () {},
-                child: Image(
-                  image: AssetImage(
-                    'assets/login_page/facebook.png',
-                  ),
-                  height: 30,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
+      ],
     );
   }
 }
@@ -237,20 +273,29 @@ class ActionButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ButtonBar(
+      buttonMinWidth: 200,
+      buttonHeight: MediaQuery.of(context).size.height * 0.07,
+      alignment: MainAxisAlignment.center,
       children: [
         RaisedButton(
-          color: Colors.blue,
-          onPressed: () {},
-          child: Text('Login'),
-        ),
-        FlatButton(
-          color: Colors.red,
-          onPressed: () {},
-          child: Text(
-            'Clear',
-            style: TextStyle(color: Colors.white),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
           ),
-        )
+          color: Colors.lightBlue[400],
+          onPressed: () {},
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              'Continue',
+              style: GoogleFonts.lato(
+                textStyle: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+        ),
       ],
     );
   }
@@ -265,17 +310,14 @@ class BackgroundImage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
+        color: const Color(0xff7c94b6),
         image: DecorationImage(
           image: AssetImage('assets/bg-login.jpg'),
+          colorFilter: ColorFilter.mode(
+              Colors.black.withOpacity(0.8), BlendMode.dstATop),
           fit: BoxFit.cover,
         ),
       ),
-      // child: BackdropFilter(
-      //   filter: ImageFilter.blur(sigmaX: 0.5, sigmaY: 0.5),
-      //   child: new Container(
-      //     decoration: new BoxDecoration(color: Colors.white.withOpacity(0.0)),
-      //   ),
-      // ),
     );
   }
 }

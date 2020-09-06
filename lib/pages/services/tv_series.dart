@@ -103,7 +103,6 @@ class _TvSeriesState extends State<TvSeries> {
                 Divider(color: Colors.grey[400], thickness: 1.5, height: 10),
                 SizedBox(height: 10),
                 _showSearchBar ? SearchBar() : SizedBox.shrink(),
-                SizedBox(height: 15),
                 AnimeList(),
               ],
             ),

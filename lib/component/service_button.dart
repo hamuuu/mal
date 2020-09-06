@@ -21,7 +21,7 @@ class ServiceButton extends StatelessWidget {
             padding: EdgeInsets.all(8),
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: Colors.blue[200],
+              color: Colors.blue[100],
             ),
             child: koukiconAirplay,
           ),

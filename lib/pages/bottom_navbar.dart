@@ -97,7 +97,7 @@ class _DestinationRouterState extends State<DestinationRouter> {
             expandedHeight: 70,
           ),
           SliverToBoxAdapter(
-            child: Center(
+            child: Container(
               child: _widgetOptions.elementAt(_selectedIndex),
             ),
           ),

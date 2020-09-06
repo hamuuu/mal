@@ -31,86 +31,93 @@ class _FliterBarButtonState extends State<FliterBarButton> {
   Widget build(BuildContext context) {
     return Container(
       // padding: const EdgeInsets.symmetric(horizontal: 10),
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          children: [
-            SizedBox(width: 10),
-            FlatButton(
-              color: _activatedOrderBy != null
-                  ? Colors.green[400]
-                  : Colors.grey[400],
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
-              ),
-              onPressed: () {
-                buildShowDialog(context);
-              },
-              splashColor: Colors.grey[600],
-              child: Row(
-                children: [
-                  Text(
-                    _activatedOrderBy == null
-                        ? 'Order by'
-                        : 'Order by $_activatedOrderBy',
-                    style: TextStyle(
-                      fontSize: 12,
+      child: Row(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+              SizedBox(width: 10),
+              FlatButton(
+                color: _activatedOrderBy != null
+                    ? Colors.green[400]
+                    : Colors.grey[400],
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                onPressed: () {
+                  buildShowDialog(context);
+                },
+                splashColor: Colors.grey[600],
+                child: Row(
+                  children: [
+                    Text(
+                      _activatedOrderBy == null
+                          ? 'Order by'
+                          : 'Order by $_activatedOrderBy',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.black87,
+                      ),
+                    ),
+                    Icon(
+                      Icons.arrow_drop_down,
                       color: Colors.black87,
                     ),
-                  ),
-                  Icon(
-                    Icons.arrow_drop_down,
-                    color: Colors.black87,
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(width: 10),
-            FlatButton(
-              color: Provider.of<TvSeriesFilterProvider>(context).onGoing
-                  ? Colors.green[400]
-                  : Colors.grey[400],
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
-              ),
-              onPressed: () {
-                Provider.of<TvSeriesFilterProvider>(
-                  context,
-                ).editFilter(
-                    !Provider.of<TvSeriesFilterProvider>(context).onGoing,
-                    Provider.of<TvSeriesFilterProvider>(context).orderBy,
-                    1,
-                    Provider.of<TvSeriesFilterProvider>(context).query);
-              },
-              splashColor: Colors.grey[600],
-              child: Text(
-                'Ongoing',
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.black87,
+                  ],
                 ),
               ),
-            ),
-            SizedBox(width: 10),
-            FlatButton(
-              color: Provider.of<TvSeriesFilterProvider>(context).query != null
-                  ? Colors.green[400]
-                  : Colors.grey[400],
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
+              SizedBox(width: 10),
+              FlatButton(
+                color: Provider.of<TvSeriesFilterProvider>(context).onGoing
+                    ? Colors.green[400]
+                    : Colors.grey[400],
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                onPressed: () {
+                  Provider.of<TvSeriesFilterProvider>(
+                    context,
+                  ).editFilter(
+                      !Provider.of<TvSeriesFilterProvider>(context).onGoing,
+                      Provider.of<TvSeriesFilterProvider>(context).orderBy,
+                      1,
+                      Provider.of<TvSeriesFilterProvider>(context).query);
+                },
+                splashColor: Colors.grey[600],
+                child: Text(
+                  'Ongoing',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.black87,
+                  ),
+                ),
               ),
-              onPressed: () {
-                Provider.of<TvSeriesFilterProvider>(context).query != null
-                    ? Provider.of<TvSeriesFilterProvider>(context)
-                        .removeSearch()
-                    : Navigator.of(context).push(_buildSearchPage(context));
-              },
-              splashColor: Colors.grey[600],
-              child: Icon(Icons.search),
+            ],
+          ),
+          InkWell(
+            child: Container(
+              margin: EdgeInsets.only(right: 10),
+              decoration: BoxDecoration(
+                color:
+                    Provider.of<TvSeriesFilterProvider>(context).query != null
+                        ? Colors.green[400]
+                        : Colors.grey[400],
+                shape: BoxShape.circle,
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(6.0),
+                child: Icon(Icons.search),
+              ),
             ),
-            SizedBox(width: 10),
-          ],
-        ),
+            onTap: () {
+              Provider.of<TvSeriesFilterProvider>(context).query != null
+                  ? Provider.of<TvSeriesFilterProvider>(context).removeSearch()
+                  : Navigator.of(context).push(_buildSearchPage(context));
+            },
+            splashColor: Colors.grey[600],
+          ),
+        ],
       ),
     );
   }
