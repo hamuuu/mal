@@ -5,8 +5,6 @@ import 'package:koukicons/star.dart';
 import 'package:mal/component/paging.dart';
 import 'package:mal/model/anime_list_model.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:intl/intl.dart';
 import 'package:mal/providers/anime_detail_provider.dart';
 import 'package:mal/providers/tv_series_provider.dart';
 import 'package:provider/provider.dart';

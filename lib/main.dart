@@ -1,7 +1,9 @@
 import 'package:mal/providers/anime_detail_provider.dart';
 import 'package:mal/providers/anime_news_provider.dart';
+import 'package:mal/providers/anime_recommend_provider.dart';
 import 'package:mal/providers/anime_review_provider.dart';
 import 'package:mal/providers/mal_account_provider.dart';
+import 'package:mal/providers/news_detail_provider.dart';
 import 'package:mal/providers/tv_series_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:mal/router.dart' as router;
@@ -20,6 +22,8 @@ void main() {
         ChangeNotifierProvider(create: (context) => AnimeDetailProvider()),
         ChangeNotifierProvider(create: (context) => AnimeNewsProvider()),
         ChangeNotifierProvider(create: (context) => AnimeReviewProvider()),
+        ChangeNotifierProvider(create: (context) => AnimeRecommendProvider()),
+        ChangeNotifierProvider(create: (context) => NewsDetailProvider()),
       ],
       child: MaterialApp(
         theme: ThemeData(

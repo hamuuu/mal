@@ -26,7 +26,6 @@ class AnimeReview extends StatelessWidget {
               future: _futureReviewAnime,
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
-                  inspect(snapshot.data);
                   return ListView.builder(
                       physics: NeverScrollableScrollPhysics(),
                       shrinkWrap: true,

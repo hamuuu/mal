@@ -7,7 +7,9 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mal/model/anime_detail_model.dart';
+import 'package:mal/model/anime_recommend_model.dart';
 import 'package:mal/providers/anime_detail_provider.dart';
+import 'package:mal/providers/anime_recommend_provider.dart';
 import 'package:mal/providers/anime_review_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
@@ -88,9 +90,7 @@ class DetailAnime extends StatelessWidget {
                             child: Stack(
                               children: [
                                 CachedFrostedBox(
-                                  opaqueBackground: Container(
-                                    color: Colors.white,
-                                  ),
+                                  opaqueBackground: Container(),
                                   sigmaX: 3.0,
                                   sigmaY: 3.0,
                                   child: Container(
@@ -110,20 +110,6 @@ class DetailAnime extends StatelessWidget {
                                     ),
                                   ),
                                 ),
-                                // Container(
-                                //   width: MediaQuery.of(context).size.width,
-                                //   height: MediaQuery.of(context).size.height * 0.3,
-                                //   decoration: BoxDecoration(
-                                //     image: DecorationImage(
-                                //       colorFilter: ColorFilter.mode(
-                                //         Colors.black,
-                                //         BlendMode.saturation,
-                                //       ),
-                                //       image: NetworkImage(snapshot.data.imageUrl),
-                                //       fit: BoxFit.fitWidth,
-                                //     ),
-                                //   ),
-                                // ),
                                 Positioned(
                                   width:
                                       MediaQuery.of(context).size.width * 0.4,
@@ -483,7 +469,9 @@ class DetailAnime extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                              onPressed: () {},
+                              onPressed: () {
+                                _buildModalBottomSheet(context);
+                              },
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(90.0),
                                   side: BorderSide(color: Colors.white70)),
@@ -510,6 +498,127 @@ class DetailAnime extends StatelessWidget {
           : string.write(item.name);
     });
   }
+}
+
+void _buildModalBottomSheet(context) {
+  showModalBottomSheet(
+    context: context,
+    builder: (BuildContext bc) {
+      Future<AnimeRecommendModel> _futureAnimeRecommendation =
+          Provider.of<AnimeRecommendProvider>(context).fetchAnimeRecommendation(
+              Provider.of<AnimeDetailProvider>(context).id);
+      return FutureBuilder(
+        future: _futureAnimeRecommendation,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return Stack(
+              children: [
+                SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.08),
+                      GridView.builder(
+                        physics: NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        padding: EdgeInsets.all(8),
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3,
+                          childAspectRatio: MediaQuery.of(context).size.width /
+                              (MediaQuery.of(context).size.height * 0.8),
+                        ),
+                        itemCount: snapshot.data.recommendations.length,
+                        itemBuilder: (context, index) => Container(
+                          child: Padding(
+                            padding: const EdgeInsets.only(
+                              bottom: 8.0,
+                              right: 8.0,
+                            ),
+                            child: InkWell(
+                              onTap: () {
+                                Provider.of<AnimeDetailProvider>(context)
+                                    .setIdAndTitle(
+                                        snapshot
+                                            .data.recommendations[index].malId
+                                            .toString(),
+                                        snapshot
+                                            .data.recommendations[index].title);
+                                Navigator.pushNamed(context, 'detail');
+                              },
+                              splashColor: Colors.blue[400],
+                              child: Stack(
+                                children: [
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                        fit: BoxFit.fill,
+                                        image: NetworkImage(snapshot.data
+                                            .recommendations[index].imageUrl),
+                                      ),
+                                    ),
+                                  ),
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      Container(
+                                        padding: EdgeInsets.all(8),
+                                        width: double.infinity,
+                                        color: Colors.black45,
+                                        child: Text(
+                                          snapshot.data.recommendations[index]
+                                              .title,
+                                          style: GoogleFonts.libreBaskerville(
+                                            textStyle: TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 12,
+                                            ),
+                                          ),
+                                          maxLines: 2,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Positioned(
+                  top: 0,
+                  child: Container(
+                    alignment: Alignment.center,
+                    height: MediaQuery.of(context).size.height * 0.08,
+                    width: MediaQuery.of(context).size.width,
+                    child: Text(
+                      'Our recommendation if you like this anime',
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.ibmPlexSansCondensed(
+                        textStyle: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14),
+                      ),
+                    ),
+                    padding: EdgeInsets.all(8),
+                    color: Colors.blue[400],
+                  ),
+                ),
+              ],
+            );
+          } else {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        },
+      );
+    },
+  );
 }
 
 class AnimeInfoList extends StatelessWidget {
