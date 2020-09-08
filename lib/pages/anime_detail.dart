@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:ui' as ui;
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
@@ -93,19 +94,38 @@ class DetailAnime extends StatelessWidget {
                                   opaqueBackground: Container(),
                                   sigmaX: 3.0,
                                   sigmaY: 3.0,
-                                  child: Container(
-                                    width: MediaQuery.of(context).size.width,
-                                    height: MediaQuery.of(context).size.height *
-                                        0.3,
-                                    decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                        colorFilter: ColorFilter.mode(
-                                          Colors.grey[600],
-                                          BlendMode.modulate,
+                                  child: CachedNetworkImage(
+                                    imageUrl: snapshot.data.imageUrl,
+                                    imageBuilder: (context, imageProvider) =>
+                                        Container(
+                                      width: MediaQuery.of(context).size.width,
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.3,
+                                      decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                          colorFilter: ColorFilter.mode(
+                                            Colors.grey[600],
+                                            BlendMode.modulate,
+                                          ),
+                                          image: NetworkImage(
+                                              snapshot.data.imageUrl),
+                                          fit: BoxFit.fitWidth,
                                         ),
-                                        image: NetworkImage(
-                                            snapshot.data.imageUrl),
-                                        fit: BoxFit.fitWidth,
+                                      ),
+                                    ),
+                                    errorWidget: (context, url, error) =>
+                                        Container(
+                                      width: MediaQuery.of(context).size.width,
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.3,
+                                      decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                          image: AssetImage(
+                                              'assets/detail-img-not-found.jpg'),
+                                          fit: BoxFit.fitWidth,
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -125,11 +145,29 @@ class DetailAnime extends StatelessWidget {
                                         width: 2,
                                       ),
                                     ),
-                                    child: Image(
-                                      image: NetworkImage(
-                                        snapshot.data.imageUrl,
+                                    child: CachedNetworkImage(
+                                      imageUrl: snapshot.data.imageUrl,
+                                      imageBuilder: (context, imageProvider) =>
+                                          Container(
+                                        decoration: BoxDecoration(
+                                          image: DecorationImage(
+                                            image: imageProvider,
+                                            fit: BoxFit.fill,
+                                          ),
+                                        ),
                                       ),
-                                      fit: BoxFit.fill,
+                                      placeholder: (context, url) =>
+                                          CircularProgressIndicator(),
+                                      errorWidget: (context, url, error) =>
+                                          Container(
+                                        decoration: BoxDecoration(
+                                          image: DecorationImage(
+                                            image: AssetImage(
+                                                'assets/img-not-found.png'),
+                                            fit: BoxFit.fill,
+                                          ),
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 )

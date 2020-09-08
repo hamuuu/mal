@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:mal/model/anime_detail_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:mal/model/anime_news_model.dart';
+import 'package:mal/model/weather_report_model.dart';
 
 class AnimeNewsProvider with ChangeNotifier {
   Future<AnimeNewsModel> fetchAnimeNews() async {
@@ -13,10 +14,21 @@ class AnimeNewsProvider with ChangeNotifier {
 
     if (response.statusCode == 200) {
       return AnimeNewsModel.fromJson(json.decode(response.body));
-    } else if (response.statusCode == 429) {
-      return this.fetchAnimeNews();
     } else {
-      return this.fetchAnimeNews();
+      throw Exception('Failed to load news.');
+    }
+  }
+
+  Future<WeatherReport> fetchWeatherReport(String query) async {
+    String url =
+        'http://api.weatherstack.com/current?access_key=f4f5b055f73c7b46f95199fee321d3e1&query=' +
+            query;
+    final response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      return WeatherReport.fromJson(json.decode(response.body));
+    } else {
+      throw Exception('Failed to load news.');
     }
   }
 

@@ -1,17 +1,27 @@
 import 'dart:developer';
 
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:custom_radio_grouped_button/custom_radio_grouped_button.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:koukicons/synchronize.dart';
 import 'package:mal/model/anime_season_list.dart';
+import 'package:mal/model/season_archive_model.dart';
+import 'package:mal/providers/anime_detail_provider.dart';
 import 'package:mal/providers/anime_season_list_provider.dart';
+import 'package:mal/providers/season_archive_provider.dart';
 import 'package:provider/provider.dart';
 
 class SeasonList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Future<AnimeSeasonListModel> _futureAnimeSeasonList =
-        Provider.of<AnimeSeasonListProvider>(context).fetchAnimeSeasonList();
+        Provider.of<AnimeSeasonListProvider>(context).fetchAnimeSeasonList(
+            Provider.of<AnimeSeasonListProvider>(context).year,
+            Provider.of<AnimeSeasonListProvider>(context).season);
+
+    Future<SeasonArchiveModel> _futureSeasonArchive =
+        Provider.of<SeasonArchiveProvider>(context).fetchSeasonArchive();
     return Scaffold(
       body: CustomScrollView(
         slivers: [
@@ -74,60 +84,79 @@ class SeasonList extends StatelessWidget {
             child: Column(
               children: [
                 SizedBox(height: 10),
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      InkWell(
-                        // color: _activatedOrderBy != null
-                        //     ? Colors.green[400]
-                        //     : Colors.grey[400],
-                        onTap: () {},
-                        splashColor: Colors.grey[600],
-                        child: Row(
-                          children: [
-                            Text(
-                              'Year',
-                              style: GoogleFonts.poppins(
+                FutureBuilder(
+                  future: _futureSeasonArchive,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      List<String> valueYear = List<String>();
+                      for (var i = 0; i < snapshot.data.archive.length; i++) {
+                        valueYear.add(snapshot.data.archive[i].year.toString());
+                      }
+                      return Column(
+                        children: [
+                          CustomRadioButton(
+                            elevation: 0,
+                            absoluteZeroSpacing: false,
+                            unSelectedColor: Theme.of(context).canvasColor,
+                            buttonLables: valueYear,
+                            buttonValues: valueYear,
+                            buttonTextStyle: ButtonTextStyle(
+                              selectedColor: Colors.white,
+                              unSelectedColor: Colors.black,
+                              textStyle: GoogleFonts.poppins(
                                 textStyle: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.black87,
-                                ),
+                                    fontSize: 12, color: Colors.white),
                               ),
                             ),
-                            Icon(
-                              Icons.arrow_drop_down,
-                              color: Colors.black87,
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(width: 20),
-                      InkWell(
-                        onTap: () {},
-                        splashColor: Colors.grey[600],
-                        child: Row(
-                          children: [
-                            Text(
-                              'Season',
-                              style: GoogleFonts.poppins(
+                            defaultSelected:
+                                Provider.of<AnimeSeasonListProvider>(context)
+                                    .year,
+                            radioButtonValue: (value) {
+                              Provider.of<AnimeSeasonListProvider>(context)
+                                  .setYear(value);
+                            },
+                            enableShape: false,
+                            selectedColor: Colors.green[400],
+                          ),
+                          CustomRadioButton(
+                            elevation: 0,
+                            absoluteZeroSpacing: false,
+                            unSelectedColor: Theme.of(context).canvasColor,
+                            buttonLables: [
+                              "Winter",
+                              "Spring",
+                              "Summer",
+                              "Fall"
+                            ],
+                            buttonValues: [
+                              "Winter",
+                              "Spring",
+                              "Summer",
+                              "Fall"
+                            ],
+                            buttonTextStyle: ButtonTextStyle(
+                              selectedColor: Colors.white,
+                              unSelectedColor: Colors.black,
+                              textStyle: GoogleFonts.poppins(
                                 textStyle: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.black87,
-                                ),
+                                    fontSize: 12, color: Colors.white),
                               ),
                             ),
-                            Icon(
-                              Icons.arrow_drop_down,
-                              color: Colors.black87,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
+                            radioButtonValue: (value) {
+                              Provider.of<AnimeSeasonListProvider>(context)
+                                  .setSeason(value);
+                            },
+                            defaultSelected:
+                                Provider.of<AnimeSeasonListProvider>(context)
+                                    .season,
+                            enableShape: false,
+                            selectedColor: Colors.green[400],
+                          ),
+                        ],
+                      );
+                    }
+                    return SizedBox.shrink();
+                  },
                 ),
                 Divider(color: Colors.black54),
                 FutureBuilder(
@@ -136,33 +165,116 @@ class SeasonList extends StatelessWidget {
                     if (snapshot.hasData) {
                       return Container(
                         width: MediaQuery.of(context).size.width,
-                        child: Center(
-                          child: GridView.builder(
-                            itemCount: 20,
-                            physics: NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            gridDelegate:
-                                SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 2,
-                                    childAspectRatio: 1 / 1.5),
-                            itemBuilder: (context, index) {
-                              return Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Stack(
-                                  children: [
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        image: DecorationImage(
-                                          image: NetworkImage(snapshot
-                                              .data.anime[index].imageUrl),
-                                        ),
-                                      ),
-                                    )
-                                  ],
+                        child: Column(
+                          children: [
+                            Container(
+                              padding: EdgeInsets.only(left: 8),
+                              alignment: Alignment.bottomLeft,
+                              child: Text(
+                                snapshot.data.seasonName +
+                                    ', ' +
+                                    snapshot.data.seasonYear.toString(),
+                                style: GoogleFonts.poppins(
+                                  textStyle: TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold),
                                 ),
-                              );
-                            },
-                          ),
+                              ),
+                            ),
+                            SizedBox(height: 10),
+                            MediaQuery.removePadding(
+                              context: context,
+                              removeTop: true,
+                              child: GridView.builder(
+                                itemCount: 20,
+                                physics: NeverScrollableScrollPhysics(),
+                                shrinkWrap: true,
+                                gridDelegate:
+                                    SliverGridDelegateWithFixedCrossAxisCount(
+                                        crossAxisCount: 2,
+                                        childAspectRatio: 1 / 1.5),
+                                itemBuilder: (context, index) {
+                                  return Padding(
+                                    padding: const EdgeInsets.only(
+                                        right: 8.0, left: 8.0, bottom: 8.0),
+                                    child: InkWell(
+                                      onTap: () {
+                                        Provider.of<AnimeDetailProvider>(
+                                                context)
+                                            .setIdAndTitle(
+                                                snapshot.data.anime[index].malId
+                                                    .toString(),
+                                                snapshot
+                                                    .data.anime[index].title);
+                                        Navigator.pushNamed(context, 'detail');
+                                      },
+                                      splashColor: Colors.blue[400],
+                                      child: Stack(
+                                        children: [
+                                          CachedNetworkImage(
+                                            imageUrl: snapshot
+                                                .data.anime[index].imageUrl,
+                                            imageBuilder:
+                                                (context, imageProvider) =>
+                                                    Container(
+                                              decoration: BoxDecoration(
+                                                image: DecorationImage(
+                                                  image: imageProvider,
+                                                  fit: BoxFit.fill,
+                                                ),
+                                              ),
+                                            ),
+                                            placeholder: (context, url) =>
+                                                CircularProgressIndicator(),
+                                            errorWidget:
+                                                (context, url, error) =>
+                                                    Container(
+                                              decoration: BoxDecoration(
+                                                image: DecorationImage(
+                                                  image: AssetImage(
+                                                      'assets/img-not-found.png'),
+                                                  fit: BoxFit.fill,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          Container(
+                                            alignment: Alignment.bottomLeft,
+                                            child: Container(
+                                              width: double.infinity,
+                                              decoration: BoxDecoration(
+                                                color: Colors.black54,
+                                              ),
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(4.0),
+                                                child: Text(
+                                                  snapshot
+                                                      .data.anime[index].title,
+                                                  style: GoogleFonts.poppins(
+                                                    textStyle: TextStyle(
+                                                      fontSize: 12,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: Colors.white,
+                                                    ),
+                                                  ),
+                                                  maxLines: 3,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
+                                              ),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                          ],
                         ),
                       );
                     } else if (snapshot.hasError) {

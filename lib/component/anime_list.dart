@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:koukicons/star.dart';
 import 'package:koukicons/synchronize.dart';
@@ -48,12 +49,49 @@ class _AnimeListState extends State<AnimeList> {
                             children: [
                               Stack(
                                 children: [
-                                  Image(
-                                    image: NetworkImage(
-                                      snapshot.data.animes[index].imageUrl,
-                                      scale: 2,
+                                  // Image(
+                                  //   image: NetworkImage(
+                                  //     snapshot.data.animes[index].imageUrl,
+                                  //     scale: 2,
+                                  //   ),
+                                  //   fit: BoxFit.fill,
+                                  // ),
+                                  CachedNetworkImage(
+                                    imageUrl:
+                                        snapshot.data.animes[index].imageUrl,
+                                    imageBuilder: (context, imageProvider) =>
+                                        Container(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.34,
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.3,
+                                      decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                          image: imageProvider,
+                                          fit: BoxFit.fill,
+                                        ),
+                                      ),
                                     ),
-                                    fit: BoxFit.fill,
+                                    placeholder: (context, url) => Container(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.34,
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.3,
+                                      child: Center(
+                                          child: CircularProgressIndicator()),
+                                    ),
+                                    errorWidget: (context, url, error) =>
+                                        Container(
+                                      decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                          image: AssetImage(
+                                              'assets/img-not-found.png'),
+                                          fit: BoxFit.fill,
+                                        ),
+                                      ),
+                                    ),
                                   ),
                                   Container(
                                     color: Colors.blue[600],
