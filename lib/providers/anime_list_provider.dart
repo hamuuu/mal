@@ -5,15 +5,16 @@ import 'package:flutter/material.dart';
 import 'package:mal/model/anime_list_model.dart';
 import 'package:http/http.dart' as http;
 
-class TvSeriesFilterProvider with ChangeNotifier {
+class ListAnimeFilterProvider with ChangeNotifier {
   bool _onGoing = false;
   String _orderBy = "Score";
   int _page = 1;
   String _query;
+  String _type;
 
   Future<AnimeListModel> fetchAnimeList(
       bool onGoing, String orderBy, String query) async {
-    String url = 'http://api.jikan.moe/v3/search/anime?type=tv';
+    String url = 'http://api.jikan.moe/v3/search/anime?type=' + _type;
     url = url + '&page=' + page.toString();
     if (orderBy == "Score") url = url + '&order_by=score';
     if (orderBy == "Title") url = url + '&order_by=title';
@@ -24,10 +25,8 @@ class TvSeriesFilterProvider with ChangeNotifier {
 
     if (response.statusCode == 200) {
       return AnimeListModel.fromJson(json.decode(response.body));
-    } else if (response.statusCode == 429) {
-      return this.fetchAnimeList(onGoing, orderBy, query);
     } else {
-      return this.fetchAnimeList(onGoing, orderBy, query);
+      throw Exception('Failed to load data.');
     }
   }
 
@@ -38,8 +37,6 @@ class TvSeriesFilterProvider with ChangeNotifier {
 
     if (response.statusCode == 200) {
       return AnimeListModel.fromJson(json.decode(response.body));
-    } else if (response.statusCode == 429) {
-      return this.fetchAnimeList(onGoing, orderBy, query);
     } else {
       throw Container(
         child: Center(
@@ -65,9 +62,20 @@ class TvSeriesFilterProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  void setType(String type) {
+    _type = type;
+    notifyListeners();
+  }
+
+  void removeType(String type) {
+    _type = null;
+    notifyListeners();
+  }
+
   void removeFilter() {
     _onGoing = false;
     _orderBy = "Score";
+
     _page = 1;
     _query = null;
     notifyListeners();
@@ -80,6 +88,7 @@ class TvSeriesFilterProvider with ChangeNotifier {
 
   bool get onGoing => _onGoing;
   String get orderBy => _orderBy;
+  String get type => _type;
   int get page => _page;
   String get query => _query;
 }

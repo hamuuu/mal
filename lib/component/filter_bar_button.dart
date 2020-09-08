@@ -6,7 +6,7 @@ import 'package:koukicons/search.dart';
 import 'package:koukicons/star.dart';
 import 'package:koukicons/streetName.dart';
 import 'package:mal/component/search_bar.dart';
-import 'package:mal/providers/tv_series_provider.dart';
+import 'package:mal/providers/anime_list_provider.dart';
 import 'package:provider/provider.dart';
 
 class FliterBarButton extends StatefulWidget {
@@ -69,20 +69,20 @@ class _FliterBarButtonState extends State<FliterBarButton> {
               ),
               SizedBox(width: 10),
               FlatButton(
-                color: Provider.of<TvSeriesFilterProvider>(context).onGoing
+                color: Provider.of<ListAnimeFilterProvider>(context).onGoing
                     ? Colors.green[400]
                     : Colors.grey[400],
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20),
                 ),
                 onPressed: () {
-                  Provider.of<TvSeriesFilterProvider>(
+                  Provider.of<ListAnimeFilterProvider>(
                     context,
                   ).editFilter(
-                      !Provider.of<TvSeriesFilterProvider>(context).onGoing,
-                      Provider.of<TvSeriesFilterProvider>(context).orderBy,
+                      !Provider.of<ListAnimeFilterProvider>(context).onGoing,
+                      Provider.of<ListAnimeFilterProvider>(context).orderBy,
                       1,
-                      Provider.of<TvSeriesFilterProvider>(context).query);
+                      Provider.of<ListAnimeFilterProvider>(context).query);
                 },
                 splashColor: Colors.grey[600],
                 child: Text(
@@ -100,7 +100,7 @@ class _FliterBarButtonState extends State<FliterBarButton> {
               margin: EdgeInsets.only(right: 10),
               decoration: BoxDecoration(
                 color:
-                    Provider.of<TvSeriesFilterProvider>(context).query != null
+                    Provider.of<ListAnimeFilterProvider>(context).query != null
                         ? Colors.green[400]
                         : Colors.grey[400],
                 shape: BoxShape.circle,
@@ -111,8 +111,8 @@ class _FliterBarButtonState extends State<FliterBarButton> {
               ),
             ),
             onTap: () {
-              Provider.of<TvSeriesFilterProvider>(context).query != null
-                  ? Provider.of<TvSeriesFilterProvider>(context).removeSearch()
+              Provider.of<ListAnimeFilterProvider>(context).query != null
+                  ? Provider.of<ListAnimeFilterProvider>(context).removeSearch()
                   : Navigator.of(context).push(_buildSearchPage(context));
             },
             splashColor: Colors.grey[600],
@@ -183,15 +183,15 @@ class _FliterBarButtonState extends State<FliterBarButton> {
                                       onChanged: (data) {
                                         setState(() {
                                           _rg = data;
-                                          Provider.of<TvSeriesFilterProvider>(
+                                          Provider.of<ListAnimeFilterProvider>(
                                                   context)
                                               .editFilter(
-                                                  Provider.of<TvSeriesFilterProvider>(
+                                                  Provider.of<ListAnimeFilterProvider>(
                                                           context)
                                                       .onGoing,
                                                   value.text,
                                                   1,
-                                                  Provider.of<TvSeriesFilterProvider>(
+                                                  Provider.of<ListAnimeFilterProvider>(
                                                           context)
                                                       .query);
                                           _activatedOrderBy = value.text;

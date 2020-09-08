@@ -9,11 +9,8 @@ class AnimeRecommendProvider with ChangeNotifier {
   Future<AnimeRecommendModel> fetchAnimeRecommendation(String malId) async {
     String url = 'https://api.jikan.moe/v3/anime/$malId/recommendations';
     final response = await http.get(url);
-
     if (response.statusCode == 200) {
       return AnimeRecommendModel.fromJson(json.decode(response.body));
-    } else if (response.statusCode == 429) {
-      return this.fetchAnimeRecommendation(malId);
     } else {
       throw Exception('Failed to load data');
     }

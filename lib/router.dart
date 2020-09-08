@@ -4,8 +4,8 @@ import 'package:mal/pages/anime_detail.dart';
 import 'package:mal/pages/login.dart';
 import 'package:mal/pages/news_detail.dart';
 import 'package:mal/pages/review.dart';
-import 'package:mal/pages/services/movies.dart';
-import 'package:mal/pages/services/tv_series.dart';
+import 'package:mal/pages/season.dart';
+import 'package:mal/pages/services/anime_list.dart';
 
 Route<dynamic> generateRoute(RouteSettings settings) {
   switch (settings.name) {
@@ -19,16 +19,12 @@ Route<dynamic> generateRoute(RouteSettings settings) {
         builder: (context) => BottomNavbar(),
       );
       break;
-    case 'tvSeries':
+    case 'animeList':
       return MaterialPageRoute(
         builder: (context) => TvSeries(),
       );
       break;
-    case 'movie':
-      return MaterialPageRoute(
-        builder: (context) => Movie(),
-      );
-      break;
+
     case 'detail':
       return MaterialPageRoute(
         builder: (context) => DetailAnime(),
@@ -42,6 +38,11 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case 'detailnews':
       return MaterialPageRoute(
         builder: (context) => NewsDetail(),
+      );
+      break;
+    case 'season':
+      return MaterialPageRoute(
+        builder: (context) => SeasonList(),
       );
       break;
 

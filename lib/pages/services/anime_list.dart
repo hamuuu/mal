@@ -1,12 +1,10 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:koukicons/search.dart';
-import 'package:koukicons/search2.dart';
 import 'package:mal/component/anime_list.dart';
 import 'package:mal/component/filter_bar_button.dart';
 import 'package:mal/component/search_bar.dart';
-import 'package:mal/providers/tv_series_provider.dart';
+import 'package:mal/providers/anime_list_provider.dart';
 import 'package:provider/provider.dart';
 
 class TvSeries extends StatefulWidget {
@@ -45,7 +43,12 @@ class _TvSeriesState extends State<TvSeries> {
                 ),
                 SizedBox(height: 2),
                 Text(
-                  'Tv Series',
+                  Provider.of<ListAnimeFilterProvider>(context).type == "tv"
+                      ? "TV Series"
+                      : Provider.of<ListAnimeFilterProvider>(context).type ==
+                              "movie"
+                          ? "Movie"
+                          : "OVA",
                   style: TextStyle(
                     color: Colors.white70,
                     fontSize: 20,
@@ -61,7 +64,7 @@ class _TvSeriesState extends State<TvSeries> {
                 icon: Icon(Icons.arrow_back_ios),
                 onPressed: () {
                   Navigator.pop(context);
-                  Provider.of<TvSeriesFilterProvider>(context).removeFilter();
+                  Provider.of<ListAnimeFilterProvider>(context).removeFilter();
                 },
               ),
             ),

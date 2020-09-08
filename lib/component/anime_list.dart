@@ -1,12 +1,14 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:google_fonts/google_fonts.dart';
 import 'package:koukicons/star.dart';
+import 'package:koukicons/synchronize.dart';
 import 'package:mal/component/paging.dart';
 import 'package:mal/model/anime_list_model.dart';
 import 'package:flutter/material.dart';
 import 'package:mal/providers/anime_detail_provider.dart';
-import 'package:mal/providers/tv_series_provider.dart';
+import 'package:mal/providers/anime_list_provider.dart';
 import 'package:provider/provider.dart';
 
 class AnimeList extends StatefulWidget {
@@ -18,10 +20,10 @@ class _AnimeListState extends State<AnimeList> {
   @override
   Widget build(BuildContext context) {
     Future<AnimeListModel> _futureAnimeList =
-        Provider.of<TvSeriesFilterProvider>(context).fetchAnimeList(
-      Provider.of<TvSeriesFilterProvider>(context).onGoing,
-      Provider.of<TvSeriesFilterProvider>(context).orderBy,
-      Provider.of<TvSeriesFilterProvider>(context).query,
+        Provider.of<ListAnimeFilterProvider>(context).fetchAnimeList(
+      Provider.of<ListAnimeFilterProvider>(context).onGoing,
+      Provider.of<ListAnimeFilterProvider>(context).orderBy,
+      Provider.of<ListAnimeFilterProvider>(context).query,
     );
     return FutureBuilder(
       future: _futureAnimeList,
@@ -159,7 +161,34 @@ class _AnimeListState extends State<AnimeList> {
               ],
             );
           } else if (snapshot.hasError) {
-            throw Exception(snapshot.error);
+            return Center(
+              child: InkWell(
+                onTap: () =>
+                    Navigator.pushReplacementNamed(context, 'animeList'),
+                child: Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Failed to load data. Click here to reload',
+                          style: GoogleFonts.poppins(
+                            textStyle: TextStyle(
+                              color: Colors.black54,
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 10),
+                        KoukiconsSynchronize(),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            );
           }
         }
         return Center(

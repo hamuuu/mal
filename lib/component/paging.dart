@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mal/providers/tv_series_provider.dart';
+import 'package:mal/providers/anime_list_provider.dart';
 import 'package:provider/provider.dart';
 
 class Paging extends StatelessWidget {
@@ -8,15 +8,15 @@ class Paging extends StatelessWidget {
     return ButtonBar(
       alignment: MainAxisAlignment.center,
       children: [
-        Provider.of<TvSeriesFilterProvider>(context).page >= 3
+        Provider.of<ListAnimeFilterProvider>(context).page >= 3
             ? FlatButton(
                 color: Colors.grey[400],
                 onPressed: () {
-                  Provider.of<TvSeriesFilterProvider>(context).editFilter(
-                      Provider.of<TvSeriesFilterProvider>(context).onGoing,
-                      Provider.of<TvSeriesFilterProvider>(context).orderBy,
+                  Provider.of<ListAnimeFilterProvider>(context).editFilter(
+                      Provider.of<ListAnimeFilterProvider>(context).onGoing,
+                      Provider.of<ListAnimeFilterProvider>(context).orderBy,
                       1,
-                      Provider.of<TvSeriesFilterProvider>(context).query);
+                      Provider.of<ListAnimeFilterProvider>(context).query);
                 },
                 child: Text(
                   "First Page",
@@ -26,15 +26,15 @@ class Paging extends StatelessWidget {
                 ),
               )
             : null,
-        Provider.of<TvSeriesFilterProvider>(context).page != 1
+        Provider.of<ListAnimeFilterProvider>(context).page != 1
             ? RaisedButton(
                 color: Colors.blue[400],
                 onPressed: () {
-                  Provider.of<TvSeriesFilterProvider>(context).editFilter(
-                      Provider.of<TvSeriesFilterProvider>(context).onGoing,
-                      Provider.of<TvSeriesFilterProvider>(context).orderBy,
-                      Provider.of<TvSeriesFilterProvider>(context).page - 1,
-                      Provider.of<TvSeriesFilterProvider>(context).query);
+                  Provider.of<ListAnimeFilterProvider>(context).editFilter(
+                      Provider.of<ListAnimeFilterProvider>(context).onGoing,
+                      Provider.of<ListAnimeFilterProvider>(context).orderBy,
+                      Provider.of<ListAnimeFilterProvider>(context).page - 1,
+                      Provider.of<ListAnimeFilterProvider>(context).query);
                 },
                 child: Text(
                   "Prev 50",
@@ -47,11 +47,11 @@ class Paging extends StatelessWidget {
         RaisedButton(
           color: Colors.blue[400],
           onPressed: () {
-            Provider.of<TvSeriesFilterProvider>(context).editFilter(
-                Provider.of<TvSeriesFilterProvider>(context).onGoing,
-                Provider.of<TvSeriesFilterProvider>(context).orderBy,
-                Provider.of<TvSeriesFilterProvider>(context).page + 1,
-                Provider.of<TvSeriesFilterProvider>(context).query);
+            Provider.of<ListAnimeFilterProvider>(context).editFilter(
+                Provider.of<ListAnimeFilterProvider>(context).onGoing,
+                Provider.of<ListAnimeFilterProvider>(context).orderBy,
+                Provider.of<ListAnimeFilterProvider>(context).page + 1,
+                Provider.of<ListAnimeFilterProvider>(context).query);
           },
           child: Text(
             "Next 50",

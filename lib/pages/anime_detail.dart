@@ -6,6 +6,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:koukicons/synchronize.dart';
 import 'package:mal/model/anime_detail_model.dart';
 import 'package:mal/model/anime_recommend_model.dart';
 import 'package:mal/providers/anime_detail_provider.dart';
@@ -13,7 +14,6 @@ import 'package:mal/providers/anime_recommend_provider.dart';
 import 'package:mal/providers/anime_review_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class DetailAnime extends StatelessWidget {
   final oCcy = new NumberFormat("#,##0", "en_US");
@@ -372,23 +372,25 @@ class DetailAnime extends StatelessWidget {
                                       ),
                                       AnimeInfo(
                                         desc: 'Type',
-                                        value: snapshot.data.type,
+                                        value: snapshot.data.type.toString(),
                                       ),
                                       AnimeInfo(
                                         desc: 'Duration',
-                                        value: snapshot.data.duration,
+                                        value:
+                                            snapshot.data.duration.toString(),
                                       ),
                                       AnimeInfo(
                                         desc: 'Status',
-                                        value: snapshot.data.status,
+                                        value: snapshot.data.status.toString(),
                                       ),
                                       AnimeInfo(
                                         desc: 'Premiered',
-                                        value: snapshot.data.premiered,
+                                        value:
+                                            snapshot.data.premiered.toString(),
                                       ),
                                       AnimeInfo(
                                         desc: 'Source',
-                                        value: snapshot.data.source,
+                                        value: snapshot.data.source.toString(),
                                       ),
                                     ],
                                   ),
@@ -610,11 +612,45 @@ void _buildModalBottomSheet(context) {
                 ),
               ],
             );
-          } else {
-            return Center(
-              child: CircularProgressIndicator(),
+          } else if (snapshot.hasError) {
+            return StatefulBuilder(
+              builder: (context, setState) => Center(
+                child: InkWell(
+                  onTap: () => setState(
+                    () => _futureAnimeRecommendation =
+                        Provider.of<AnimeRecommendProvider>(context)
+                            .fetchAnimeRecommendation(
+                                Provider.of<AnimeDetailProvider>(context).id),
+                  ),
+                  child: Card(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Failed to load data. Click here to reload',
+                            style: GoogleFonts.poppins(
+                              textStyle: TextStyle(
+                                color: Colors.black54,
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          KoukiconsSynchronize(),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
             );
           }
+          return Center(
+            child: CircularProgressIndicator(),
+          );
         },
       );
     },

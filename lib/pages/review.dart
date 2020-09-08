@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:koukicons/synchronize.dart';
 import 'package:mal/component/app_bar_detail_anime.dart';
 import 'package:mal/providers/anime_detail_provider.dart';
 import 'package:mal/providers/anime_review_provider.dart';
@@ -226,18 +227,46 @@ class AnimeReview extends StatelessWidget {
                           ],
                         );
                       });
-                } else {
-                  return Column(
-                    children: [
-                      SizedBox(
-                        height: 50,
+                } else if (snapshot.hasError) {
+                  return Center(
+                    child: InkWell(
+                      onTap: () =>
+                          Navigator.pushReplacementNamed(context, 'review'),
+                      child: Card(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Failed to load data. Click here to reload',
+                                style: GoogleFonts.poppins(
+                                  textStyle: TextStyle(
+                                    color: Colors.black54,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: 10),
+                              KoukiconsSynchronize(),
+                            ],
+                          ),
+                        ),
                       ),
-                      Center(
-                        child: CircularProgressIndicator(),
-                      )
-                    ],
+                    ),
                   );
                 }
+                return Column(
+                  children: [
+                    SizedBox(
+                      height: 50,
+                    ),
+                    Center(
+                      child: CircularProgressIndicator(),
+                    )
+                  ],
+                );
               },
             ),
           )

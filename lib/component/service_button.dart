@@ -1,4 +1,8 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:mal/providers/anime_list_provider.dart';
+import 'package:provider/provider.dart';
 
 class ServiceButton extends StatelessWidget {
   final Object koukiconAirplay;
@@ -32,7 +36,16 @@ class ServiceButton extends StatelessWidget {
           ),
         ],
       ),
-      onPressed: () => Navigator.pushNamed(context, routeName),
+      onPressed: () {
+        if (label == "TV Series") {
+          Provider.of<ListAnimeFilterProvider>(context).setType('tv');
+        } else if (label == "Movie") {
+          Provider.of<ListAnimeFilterProvider>(context).setType('movie');
+        } else if (label == "OVA") {
+          Provider.of<ListAnimeFilterProvider>(context).setType('ova');
+        }
+        Navigator.pushNamed(context, routeName);
+      },
     );
   }
 }

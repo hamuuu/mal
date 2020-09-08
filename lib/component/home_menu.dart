@@ -81,28 +81,28 @@ class HomeMenu extends StatelessWidget {
                     height: 40,
                   ),
                   label: "TV Series",
-                  routeName: "tvSeries",
+                  routeName: "animeList",
                 ),
                 ServiceButton(
                   koukiconAirplay: KoukiconsMovie2(
                     height: 40,
                   ),
                   label: "Movie",
-                  routeName: "movie",
+                  routeName: "animeList",
                 ),
                 ServiceButton(
                   koukiconAirplay: KoukiconsMultipleDevices(
                     height: 40,
                   ),
                   label: "OVA",
-                  routeName: "home",
+                  routeName: "animeList",
                 ),
                 ServiceButton(
                   koukiconAirplay: KoukiconsCloud(
                     height: 40,
                   ),
                   label: "Season",
-                  routeName: "home",
+                  routeName: "season",
                 ),
                 ServiceButton(
                   koukiconAirplay: KoukiconsAlarm2(

@@ -4,7 +4,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:mal/model/anime_list_model.dart';
 import 'package:mal/providers/anime_detail_provider.dart';
-import 'package:mal/providers/tv_series_provider.dart';
+import 'package:mal/providers/anime_list_provider.dart';
 import 'package:provider/provider.dart';
 
 class SearchBar extends StatefulWidget {
@@ -60,7 +60,7 @@ class _SearchBarState extends State<SearchBar> {
                         setState(() {
                           _isSearched = true;
                           _futureAnimeList =
-                              Provider.of<TvSeriesFilterProvider>(context)
+                              Provider.of<ListAnimeFilterProvider>(context)
                                   .fetchAnimeSearchList(value);
                         });
                       else {
@@ -166,37 +166,37 @@ class _SearchBarState extends State<SearchBar> {
                         ],
                       ),
                     );
-                  else
-                    return Container(
-                      decoration: BoxDecoration(
-                        color: Colors.grey[200],
-                        border: Border(
-                          left: BorderSide(
-                            color: Colors.black54,
-                            width: 0.5,
-                          ),
-                          right: BorderSide(
-                            color: Colors.black54,
-                            width: 0.5,
-                          ),
-                          bottom: BorderSide(
-                            color: Colors.black54,
-                            width: 0.5,
+
+                  return Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      border: Border(
+                        left: BorderSide(
+                          color: Colors.black54,
+                          width: 0.5,
+                        ),
+                        right: BorderSide(
+                          color: Colors.black54,
+                          width: 0.5,
+                        ),
+                        bottom: BorderSide(
+                          color: Colors.black54,
+                          width: 0.5,
+                        ),
+                      ),
+                    ),
+                    child: Center(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 20.0),
+                        child: Text(
+                          'Input 3 or more character to get the results.',
+                          style: TextStyle(
+                            color: Colors.grey,
                           ),
                         ),
                       ),
-                      child: Center(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 20.0),
-                          child: Text(
-                            'Input 3 or more character to get the results.',
-                            style: TextStyle(
-                              color: Colors.grey,
-                            ),
-                          ),
-                        ),
-                      ),
-                    );
+                    ),
+                  );
                 } else if (!snapshot.hasData && _controller.text.length > 2) {
                   return Container(
                     decoration: BoxDecoration(
@@ -235,7 +235,7 @@ class _SearchBarState extends State<SearchBar> {
   }
 
   void searchMore() {
-    Provider.of<TvSeriesFilterProvider>(context).editFilter(
+    Provider.of<ListAnimeFilterProvider>(context).editFilter(
       false,
       null,
       1,
