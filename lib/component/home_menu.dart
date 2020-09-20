@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:koukicons/about.dart';
 import 'package:koukicons/airplay.dart';
 import 'package:koukicons/alarm2.dart';
 import 'package:koukicons/albumsView.dart';
 import 'package:koukicons/cloud.dart';
-import 'package:koukicons/library.dart';
 import 'package:koukicons/list.dart';
 import 'package:koukicons/movie2.dart';
 import 'package:koukicons/multipleDevices.dart';
@@ -18,48 +16,6 @@ class HomeMenu extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 12.0),
       child: Column(
         children: [
-          // Row(
-          //   crossAxisAlignment: CrossAxisAlignment.end,
-          //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //   children: [
-          //     Container(
-          //       decoration: BoxDecoration(
-          //         borderRadius: BorderRadius.only(
-          //           topLeft: Radius.circular(10),
-          //           topRight: Radius.circular(10),
-          //         ),
-          //         color: Colors.lightBlue[50],
-          //       ),
-          //       child: Padding(
-          //         padding: const EdgeInsets.symmetric(
-          //           vertical: 8.0,
-          //           horizontal: 12.0,
-          //         ),
-          //         child: Text(
-          //           "Services",
-          //           style: GoogleFonts.poppins(
-          //             textStyle: TextStyle(
-          //               fontWeight: FontWeight.bold,
-          //               color: Colors.blue,
-          //             ),
-          //           ),
-          //         ),
-          //       ),
-          //     ),
-          //     Container(
-          //       width: 50,
-          //       height: 50,
-          //       decoration: BoxDecoration(
-          //         color: Colors.white,
-          //         image: DecorationImage(
-          //           image: AssetImage(
-          //             'assets/maneki-neko.png',
-          //           ),
-          //         ),
-          //       ),
-          //     )
-          //   ],
-          // ),
           Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.only(
@@ -67,7 +23,6 @@ class HomeMenu extends StatelessWidget {
                 bottomRight: Radius.circular(5),
                 topRight: Radius.circular(5),
               ),
-              // color: Colors.lightBlue[50],
             ),
             child: GridView.count(
               padding: EdgeInsets.all(10),
@@ -109,7 +64,7 @@ class HomeMenu extends StatelessWidget {
                     height: 40,
                   ),
                   label: "Schedule",
-                  routeName: "home",
+                  routeName: "schedules",
                 ),
                 ServiceButton(
                   koukiconAirplay: KoukiconsAlbumsView(

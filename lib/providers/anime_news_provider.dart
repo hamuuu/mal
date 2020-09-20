@@ -28,7 +28,7 @@ class AnimeNewsProvider with ChangeNotifier {
     if (response.statusCode == 200) {
       return WeatherReport.fromJson(json.decode(response.body));
     } else {
-      throw Exception('Failed to load news.');
+      return fetchWeatherReport(query);
     }
   }
 

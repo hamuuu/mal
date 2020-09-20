@@ -42,7 +42,6 @@ dependencies:
   cached_network_image: ^2.3.1
   custom_radio_grouped_button: ^1.0.6
   geolocator: 5.1.3
-  location: ^3.0.2
 
 dev_dependencies:
   flutter_test:
@@ -62,6 +61,7 @@ flutter:
     - assets/
     - assets/carousel/
     - assets/login_page/
+    - assets/day_icon/
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
   # For details regarding adding assets from package dependencies, see

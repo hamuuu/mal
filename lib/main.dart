@@ -6,6 +6,7 @@ import 'package:mal/providers/anime_season_list_provider.dart';
 import 'package:mal/providers/mal_account_provider.dart';
 import 'package:mal/providers/news_detail_provider.dart';
 import 'package:mal/providers/anime_list_provider.dart';
+import 'package:mal/providers/schedules_provider.dart';
 import 'package:mal/providers/season_archive_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:mal/router.dart' as router;
@@ -28,6 +29,7 @@ void main() {
         ChangeNotifierProvider(create: (context) => NewsDetailProvider()),
         ChangeNotifierProvider(create: (context) => AnimeSeasonListProvider()),
         ChangeNotifierProvider(create: (context) => SeasonArchiveProvider()),
+        ChangeNotifierProvider(create: (context) => SchedulesProvider()),
       ],
       child: MaterialApp(
         theme: ThemeData(

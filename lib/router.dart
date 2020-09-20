@@ -3,8 +3,9 @@ import 'package:mal/pages/bottom_navbar.dart';
 import 'package:mal/pages/anime_detail.dart';
 import 'package:mal/pages/login.dart';
 import 'package:mal/pages/news_detail.dart';
-import 'package:mal/pages/review.dart';
-import 'package:mal/pages/season.dart';
+import 'package:mal/component/anime_detail_review.dart';
+import 'package:mal/pages/services/schedules.dart';
+import 'package:mal/pages/services/season.dart';
 import 'package:mal/pages/services/anime_list.dart';
 
 Route<dynamic> generateRoute(RouteSettings settings) {
@@ -30,11 +31,6 @@ Route<dynamic> generateRoute(RouteSettings settings) {
         builder: (context) => DetailAnime(),
       );
       break;
-    case 'review':
-      return MaterialPageRoute(
-        builder: (context) => AnimeReview(),
-      );
-      break;
     case 'detailnews':
       return MaterialPageRoute(
         builder: (context) => NewsDetail(),
@@ -43,6 +39,11 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case 'season':
       return MaterialPageRoute(
         builder: (context) => SeasonList(),
+      );
+      break;
+    case 'schedules':
+      return MaterialPageRoute(
+        builder: (context) => Schedules(),
       );
       break;
 

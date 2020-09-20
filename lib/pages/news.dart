@@ -213,7 +213,7 @@ class _NewsState extends State<News> {
                                     Container(
                                   width: double.infinity,
                                   height:
-                                      MediaQuery.of(context).size.height * 0.4,
+                                      MediaQuery.of(context).size.height * 0.3,
                                   decoration: BoxDecoration(
                                     image: DecorationImage(
                                       image: NetworkImage(snapshot
@@ -263,7 +263,7 @@ class _NewsState extends State<News> {
                                 placeholder: (context, url) => Container(
                                   width: double.infinity,
                                   height:
-                                      MediaQuery.of(context).size.height * 0.4,
+                                      MediaQuery.of(context).size.height * 0.3,
                                   child: Center(
                                       child: CircularProgressIndicator()),
                                 ),
@@ -385,7 +385,7 @@ class _NewsState extends State<News> {
                                           );
                                         }
                                         if (snapshot.hasError) {
-                                          Text(snapshot.error);
+                                          return SizedBox.shrink();
                                         }
                                         return SizedBox.shrink();
                                       })

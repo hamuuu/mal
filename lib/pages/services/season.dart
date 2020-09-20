@@ -12,7 +12,12 @@ import 'package:mal/providers/anime_season_list_provider.dart';
 import 'package:mal/providers/season_archive_provider.dart';
 import 'package:provider/provider.dart';
 
-class SeasonList extends StatelessWidget {
+class SeasonList extends StatefulWidget {
+  @override
+  _SeasonListState createState() => _SeasonListState();
+}
+
+class _SeasonListState extends State<SeasonList> {
   @override
   Widget build(BuildContext context) {
     Future<AnimeSeasonListModel> _futureAnimeSeasonList =
@@ -87,71 +92,123 @@ class SeasonList extends StatelessWidget {
                 FutureBuilder(
                   future: _futureSeasonArchive,
                   builder: (context, snapshot) {
+                    String tempYear =
+                        Provider.of<AnimeSeasonListProvider>(context).year;
+                    String tempSeason =
+                        Provider.of<AnimeSeasonListProvider>(context).season;
+
                     if (snapshot.hasData) {
                       List<String> valueYear = List<String>();
                       for (var i = 0; i < snapshot.data.archive.length; i++) {
                         valueYear.add(snapshot.data.archive[i].year.toString());
                       }
                       return Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          CustomRadioButton(
-                            elevation: 0,
-                            absoluteZeroSpacing: false,
-                            unSelectedColor: Theme.of(context).canvasColor,
-                            buttonLables: valueYear,
-                            buttonValues: valueYear,
-                            buttonTextStyle: ButtonTextStyle(
-                              selectedColor: Colors.white,
-                              unSelectedColor: Colors.black,
-                              textStyle: GoogleFonts.poppins(
-                                textStyle: TextStyle(
-                                    fontSize: 12, color: Colors.white),
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 8.0),
+                            child: CustomRadioButton(
+                              elevation: 0,
+                              absoluteZeroSpacing: false,
+                              unSelectedColor: Theme.of(context).canvasColor,
+                              buttonLables: valueYear,
+                              buttonValues: valueYear,
+                              buttonTextStyle: ButtonTextStyle(
+                                selectedColor: Colors.white,
+                                unSelectedColor: Colors.black,
+                                textStyle: GoogleFonts.poppins(
+                                  textStyle: TextStyle(
+                                      fontSize: 12, color: Colors.white),
+                                ),
                               ),
+                              defaultSelected:
+                                  Provider.of<AnimeSeasonListProvider>(context)
+                                      .year,
+                              radioButtonValue: (value) {
+                                tempYear = value;
+                              },
+                              enableShape: false,
+                              selectedColor: Colors.green[400],
                             ),
-                            defaultSelected:
-                                Provider.of<AnimeSeasonListProvider>(context)
-                                    .year,
-                            radioButtonValue: (value) {
-                              Provider.of<AnimeSeasonListProvider>(context)
-                                  .setYear(value);
-                            },
-                            enableShape: false,
-                            selectedColor: Colors.green[400],
                           ),
-                          CustomRadioButton(
-                            elevation: 0,
-                            absoluteZeroSpacing: false,
-                            unSelectedColor: Theme.of(context).canvasColor,
-                            buttonLables: [
-                              "Winter",
-                              "Spring",
-                              "Summer",
-                              "Fall"
-                            ],
-                            buttonValues: [
-                              "Winter",
-                              "Spring",
-                              "Summer",
-                              "Fall"
-                            ],
-                            buttonTextStyle: ButtonTextStyle(
-                              selectedColor: Colors.white,
-                              unSelectedColor: Colors.black,
-                              textStyle: GoogleFonts.poppins(
-                                textStyle: TextStyle(
-                                    fontSize: 12, color: Colors.white),
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 8.0),
+                            child: CustomRadioButton(
+                              elevation: 0,
+                              absoluteZeroSpacing: false,
+                              unSelectedColor: Theme.of(context).canvasColor,
+                              buttonLables: [
+                                "Winter",
+                                "Spring",
+                                "Summer",
+                                "Fall"
+                              ],
+                              buttonValues: [
+                                "Winter",
+                                "Spring",
+                                "Summer",
+                                "Fall"
+                              ],
+                              buttonTextStyle: ButtonTextStyle(
+                                selectedColor: Colors.white,
+                                unSelectedColor: Colors.black,
+                                textStyle: GoogleFonts.poppins(
+                                  textStyle: TextStyle(
+                                      fontSize: 12, color: Colors.white),
+                                ),
                               ),
+                              radioButtonValue: (value) {
+                                tempSeason = value;
+                              },
+                              defaultSelected:
+                                  Provider.of<AnimeSeasonListProvider>(context)
+                                      .season,
+                              enableShape: false,
+                              selectedColor: Colors.green[400],
                             ),
-                            radioButtonValue: (value) {
-                              Provider.of<AnimeSeasonListProvider>(context)
-                                  .setSeason(value);
-                            },
-                            defaultSelected:
-                                Provider.of<AnimeSeasonListProvider>(context)
-                                    .season,
-                            enableShape: false,
-                            selectedColor: Colors.green[400],
                           ),
+                          Padding(
+                            padding:
+                                const EdgeInsets.only(right: 5.0, top: 5.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                InkWell(
+                                  splashColor: Colors.blue[600],
+                                  child: Container(
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 8, horizontal: 30),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(5),
+                                      color: Colors.blue[600],
+                                    ),
+                                    child: Text(
+                                      'Set',
+                                      style: GoogleFonts.poppins(
+                                        textStyle: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 12,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  onTap: () {
+                                    if (tempYear != null &&
+                                        tempSeason != null) {
+                                      Provider.of<AnimeSeasonListProvider>(
+                                              context)
+                                          .setYearAndSeason(
+                                              tempYear, tempSeason);
+                                    }
+                                  },
+                                ),
+                                SizedBox(width: 5),
+                              ],
+                            ),
+                          )
                         ],
                       );
                     }
@@ -282,26 +339,24 @@ class SeasonList extends StatelessWidget {
                         child: InkWell(
                           onTap: () =>
                               Navigator.pushReplacementNamed(context, 'season'),
-                          child: Card(
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    'Failed to load data. Click here to reload',
-                                    style: GoogleFonts.poppins(
-                                      textStyle: TextStyle(
-                                        color: Colors.black54,
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  'Failed to load data. Click here to reload',
+                                  style: GoogleFonts.poppins(
+                                    textStyle: TextStyle(
+                                      color: Colors.black54,
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                  SizedBox(height: 10),
-                                  KoukiconsSynchronize(),
-                                ],
-                              ),
+                                ),
+                                SizedBox(height: 10),
+                                KoukiconsSynchronize(),
+                              ],
                             ),
                           ),
                         ),

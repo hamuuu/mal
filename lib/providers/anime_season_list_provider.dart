@@ -8,16 +8,24 @@ import 'package:mal/model/anime_season_list.dart';
 class AnimeSeasonListProvider with ChangeNotifier {
   String _season = "Summer";
   String _year = DateTime.now().year.toString();
+
   Future<AnimeSeasonListModel> fetchAnimeSeasonList(
       String year, String season) async {
     String url;
-    url =
-        'https://api.jikan.moe/v3/season/' + year + '/' + season.toLowerCase();
-    inspect(url);
+    if (_season != null && _year != null)
+      url = 'https://api.jikan.moe/v3/season/' +
+          year +
+          '/' +
+          season.toLowerCase();
+    else
+      url = 'https://api.jikan.moe/v3/season';
 
     final response = await http.get(url);
     if (response.statusCode == 200) {
-      return AnimeSeasonListModel.fromJson(json.decode(response.body));
+      AnimeSeasonListModel animeList =
+          AnimeSeasonListModel.fromJson(json.decode(response.body));
+
+      return animeList;
     } else {
       throw Exception('Failed to load data');
     }
@@ -30,6 +38,13 @@ class AnimeSeasonListProvider with ChangeNotifier {
 
   void setYear(String year) {
     _year = year;
+    notifyListeners();
+  }
+
+  void setYearAndSeason(String year, String season) {
+    _year = year;
+    _season = season;
+
     notifyListeners();
   }
 
