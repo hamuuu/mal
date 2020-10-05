@@ -3,6 +3,7 @@ import 'package:mal/providers/anime_news_provider.dart';
 import 'package:mal/providers/anime_recommend_provider.dart';
 import 'package:mal/providers/anime_review_provider.dart';
 import 'package:mal/providers/anime_season_list_provider.dart';
+import 'package:mal/providers/genre_anime_list_provider.dart';
 import 'package:mal/providers/mal_account_provider.dart';
 import 'package:mal/providers/news_detail_provider.dart';
 import 'package:mal/providers/anime_list_provider.dart';
@@ -30,6 +31,7 @@ void main() {
         ChangeNotifierProvider(create: (context) => AnimeSeasonListProvider()),
         ChangeNotifierProvider(create: (context) => SeasonArchiveProvider()),
         ChangeNotifierProvider(create: (context) => SchedulesProvider()),
+        ChangeNotifierProvider(create: (context) => GenreAnimeListProvider()),
       ],
       child: MaterialApp(
         theme: ThemeData(

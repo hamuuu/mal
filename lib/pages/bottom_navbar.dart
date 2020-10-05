@@ -38,7 +38,7 @@ class _DestinationRouterState extends State<DestinationRouter> {
 
   @override
   Widget build(BuildContext context) {
-    final _name = Provider.of<Auth>(context).account.displayName;
+    // final _name = Provider.of<Auth>(context).account.displayName;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -61,7 +61,7 @@ class _DestinationRouterState extends State<DestinationRouter> {
                   ),
                   SizedBox(height: 5),
                   Text(
-                    '$_name',
+                    'Welcome to Our App',
                     style: TextStyle(
                       color: Colors.white70,
                       fontSize: 16,

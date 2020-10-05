@@ -71,7 +71,7 @@ class HomeMenu extends StatelessWidget {
                     height: 40,
                   ),
                   label: "Genre",
-                  routeName: "home",
+                  routeName: "genre",
                 ),
                 ServiceButton(
                   koukiconAirplay: KoukiconsList(
